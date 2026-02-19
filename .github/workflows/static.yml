@@ -32,14 +32,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-```
-
-**Your repo structure should look like:**
-```
-your-repo/
-├── .github/
-│   └── workflows/
-│       └── static.yml
-├── index.html
-└── galvor_images/
-    └── (your logo images)
