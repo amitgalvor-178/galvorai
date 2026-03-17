@@ -1,917 +1,1403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galvor — AI-Powered Influencer Marketing</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galvor — We don't do impressions. We do impact.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --deep-indigo: #12102D;
-    --navy: #191C38;
-    --violet: #6C5CE7;
-    --soft-violet: #A29BFE;
-    --coral: #FF6B6B;
-    --teal: #00B894;
-    --slate: #2D3436;
-    --light-slate: #4B5563;
-    --pearl: #F0F2F8;
-    --dim-pearl: #B4B9C3;
-    --white: #FFFFFF;
-    --card-dark: #1E2142;
-    --surface: #262848;
-    --border: #3D3F6B;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html {
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: var(--violet) var(--deep-indigo);
-  }
-
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--deep-indigo);
-    color: var(--pearl);
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-  .section { padding: 7rem 0; position: relative; }
-  .section-light { background: var(--pearl); color: var(--slate); }
-
-  .section-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--coral);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .section-label::before {
-    content: '';
-    width: 2rem;
-    height: 2px;
-    background: var(--violet);
-    display: inline-block;
-  }
-
-  .section-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 1rem;
-  }
-
-  .section-subtitle {
-    font-size: 1.05rem;
-    color: var(--dim-pearl);
-    max-width: 600px;
-    line-height: 1.6;
-  }
-  .section-light .section-subtitle { color: var(--light-slate); }
-
-  /* Reveal animation */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
-  .reveal-delay-5 { transition-delay: 0.5s; }
-
-  /* Nav */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    padding: 1rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    transition: all 0.3s ease;
-    background: transparent;
-  }
-  nav.scrolled {
-    background: rgba(18, 16, 45, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(108, 92, 231, 0.15);
-    padding: 0.7rem 2rem;
-  }
-  .nav-logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700; font-size: 1.4rem;
-    letter-spacing: 4px; color: var(--violet);
-  }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    color: var(--dim-pearl); text-decoration: none;
-    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px;
-    transition: color 0.3s; position: relative;
-  }
-  .nav-links a:hover { color: var(--pearl); }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: -4px; left: 0;
-    width: 0; height: 2px; background: var(--violet); transition: width 0.3s;
-  }
-  .nav-links a:hover::after { width: 100%; }
-  .nav-cta {
-    background: var(--violet) !important; color: var(--white) !important;
-    padding: 0.5rem 1.25rem; border-radius: 6px; transition: all 0.3s !important;
-  }
-  .nav-cta:hover { background: var(--soft-violet) !important; transform: translateY(-1px); }
-  .nav-cta::after { display: none !important; }
-  .mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
-  .mobile-toggle span { display: block; width: 24px; height: 2px; background: var(--pearl); margin: 5px 0; transition: all 0.3s; }
-
-  /* Hero */
-  .hero {
-    min-height: 100vh; display: flex; align-items: center;
-    position: relative; overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(108, 92, 231, 0.12), transparent),
-      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(255, 107, 107, 0.06), transparent),
-      var(--deep-indigo);
-  }
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(108, 92, 231, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(108, 92, 231, 0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
-  }
-  .hero-orb {
-    position: absolute; border-radius: 50%; filter: blur(80px);
-    animation: float 8s ease-in-out infinite;
-  }
-  .hero-orb-1 { width: 400px; height: 400px; background: rgba(108, 92, 231, 0.15); top: 10%; right: 5%; }
-  .hero-orb-2 { width: 300px; height: 300px; background: rgba(255, 107, 107, 0.08); bottom: 10%; left: 10%; animation-delay: -4s; }
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(30px, -20px) scale(1.05); }
-  }
-  .hero .container { position: relative; z-index: 2; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: rgba(108, 92, 231, 0.12); border: 1px solid rgba(108, 92, 231, 0.25);
-    border-radius: 100px; padding: 0.4rem 1rem;
-    font-size: 0.8rem; font-weight: 500; color: var(--soft-violet);
-    margin-bottom: 2rem; backdrop-filter: blur(10px);
-  }
-  .hero-badge-dot {
-    width: 6px; height: 6px; background: var(--teal); border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .hero-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(2.8rem, 6vw, 4.5rem);
-    font-weight: 800; line-height: 1.08; margin-bottom: 1.5rem; max-width: 700px;
-  }
-  .gradient-text {
-    background: linear-gradient(135deg, var(--coral), var(--violet));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .hero-desc { font-size: 1.15rem; color: var(--dim-pearl); line-height: 1.7; max-width: 520px; margin-bottom: 2.5rem; }
-  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.85rem 2rem; border-radius: 8px; font-size: 0.95rem;
-    font-weight: 600; text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; border: none;
-  }
-  .btn-primary {
-    background: var(--violet); color: var(--white);
-    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
-  }
-  .btn-primary:hover { background: var(--soft-violet); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108, 92, 231, 0.4); }
-  .btn-outline { background: transparent; color: var(--pearl); border: 1px solid var(--border); }
-  .btn-outline:hover { border-color: var(--violet); background: rgba(108, 92, 231, 0.08); transform: translateY(-2px); }
-
-  /* Pain Points */
-  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
-  .pain-card {
-    background: var(--card-dark); border: 1px solid var(--border); border-radius: 12px;
-    padding: 1.75rem; position: relative; overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .pain-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--coral), transparent);
-  }
-  .pain-card:hover { transform: translateY(-4px); border-color: rgba(255, 107, 107, 0.3); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); }
-  .pain-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    background: rgba(255, 107, 107, 0.1);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem; font-size: 1.2rem;
-  }
-  .pain-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; }
-  .pain-card p { font-size: 0.875rem; color: var(--dim-pearl); line-height: 1.55; }
-
-  /* Intro / Divider */
-  .intro-section {
-    text-align: center; padding: 8rem 0; position: relative; overflow: hidden;
-  }
-  .intro-section::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(108, 92, 231, 0.08), transparent);
-  }
-  .intro-logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(3.5rem, 8vw, 6rem);
-    font-weight: 800; letter-spacing: 12px; color: var(--pearl); position: relative; z-index: 2;
-  }
-  .intro-tagline { font-size: 1.25rem; color: var(--coral); font-weight: 500; margin-top: 1rem; position: relative; z-index: 2; }
-  .intro-line { width: 80px; height: 2px; background: var(--violet); margin: 2rem auto 0; position: relative; z-index: 2; }
-
-  /* Platform Phases */
-  .phase-block { margin-top: 2.5rem; }
-  .phase-header {
-    display: flex; align-items: center; gap: 1rem;
-    margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
-  }
-  .phase-num {
-    font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 700;
-    color: var(--coral); background: rgba(255, 107, 107, 0.1);
-    padding: 0.3rem 0.6rem; border-radius: 4px; letter-spacing: 1px;
-  }
-  .phase-name {
-    font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem;
-    font-weight: 600; color: var(--pearl); letter-spacing: 1px; text-transform: uppercase;
-  }
-  .phase-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; }
-  .phase-item {
-    background: var(--surface); border-radius: 8px; padding: 1.1rem 1.25rem;
-    border-left: 3px solid var(--violet); transition: all 0.3s ease;
-  }
-  .phase-item:hover { background: rgba(38, 40, 72, 0.8); transform: translateX(4px); }
-  .phase-item.brand { border-left-color: var(--teal); }
-  .phase-item.coming { border-left-color: var(--light-slate); }
-  .phase-item-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
-  .phase-item-desc { font-size: 0.8rem; color: var(--dim-pearl); line-height: 1.5; margin-bottom: 0.5rem; }
-  .phase-item-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-  .phase-item-tag.galvor { color: var(--violet); }
-  .phase-item-tag.brand-tag { color: var(--teal); }
-  .phase-item-tag.coming-tag { color: var(--light-slate); }
-  .legend { display: flex; gap: 1.5rem; margin-top: 1.5rem; }
-  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--dim-pearl); }
-  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-  /* Capability Cards */
-  .cap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .cap-card {
-    background: var(--card-dark); border: 1px solid var(--border); border-radius: 12px;
-    padding: 2rem; position: relative; overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .cap-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
-  .cap-card.teal-accent::before { background: var(--teal); }
-  .cap-card.coral-accent::before { background: var(--coral); }
-  .cap-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); }
-  .cap-card-icon {
-    width: 48px; height: 48px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.3rem;
-  }
-  .cap-card.teal-accent .cap-card-icon { background: rgba(0, 184, 148, 0.1); }
-  .cap-card.coral-accent .cap-card-icon { background: rgba(255, 107, 107, 0.1); }
-  .cap-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
-  .cap-card ul { list-style: none; padding: 0; }
-  .cap-card li {
-    position: relative; padding-left: 1.25rem; margin-bottom: 0.6rem;
-    font-size: 0.875rem; color: var(--dim-pearl); line-height: 1.5;
-  }
-  .cap-card li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 5px; height: 5px; border-radius: 50%; }
-  .cap-card.teal-accent li::before { background: var(--teal); }
-  .cap-card.coral-accent li::before { background: var(--coral); }
-
-  /* Why Galvor Divider */
-  .why-section {
-    text-align: center; padding: 8rem 0; position: relative;
-    background: linear-gradient(180deg, var(--deep-indigo), var(--navy), var(--deep-indigo));
-  }
-  .why-section .intro-logo { font-size: clamp(3rem, 7vw, 5rem); }
-
-  /* Comparison Table */
-  .comparison-wrapper {
-    margin-top: 3rem; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border);
-  }
-  .comparison-table { width: 100%; border-collapse: collapse; min-width: 700px; }
-  .comparison-table th, .comparison-table td {
-    padding: 1rem 1.25rem; text-align: left; font-size: 0.875rem;
-    line-height: 1.5; border-bottom: 1px solid var(--border);
-  }
-  .comparison-table thead th {
-    background: var(--navy); font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600; font-size: 0.8rem; letter-spacing: 0.5px;
-    color: var(--dim-pearl); white-space: nowrap;
-  }
-  .comparison-table thead th:last-child { background: var(--violet); color: var(--white); }
-  .comparison-table tbody td { color: var(--dim-pearl); }
-  .comparison-table tbody td:first-child { font-weight: 600; color: var(--pearl); background: var(--surface); }
-  .comparison-table tbody td:last-child { color: var(--pearl); background: rgba(108, 92, 231, 0.06); border-left: 2px solid var(--violet); }
-  .comparison-table tbody tr:hover td { background: rgba(108, 92, 231, 0.04); }
-  .comparison-table tbody tr:hover td:first-child { background: rgba(108, 92, 231, 0.08); }
-  .comparison-table tbody tr:hover td:last-child { background: rgba(108, 92, 231, 0.1); }
-
-  /* Clients */
-  .clients-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-top: 3rem; }
-  .client-card {
-    background: var(--white); border-radius: 12px; padding: 1.5rem;
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-  }
-  .client-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); }
-  .client-card img { max-width: 100%; max-height: 60px; object-fit: contain; opacity: 0.8; transition: opacity 0.3s; }
-  .client-card:hover img { opacity: 1; }
-
-  /* Mission */
-  .mission-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .mission-card {
-    background: var(--card-dark); border: 1px solid var(--border); border-radius: 12px;
-    padding: 2rem; position: relative; overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .mission-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); }
-  .mission-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
-  .mission-card:nth-child(1)::before { background: var(--coral); }
-  .mission-card:nth-child(2)::before { background: var(--teal); }
-  .mission-card:nth-child(3)::before { background: var(--violet); }
-  .mission-card:nth-child(4)::before { background: var(--soft-violet); }
-  .mission-num {
-    font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700;
-    opacity: 0.15; position: absolute; top: 1rem; right: 1.5rem;
-  }
-  .mission-card:nth-child(1) .mission-num { color: var(--coral); }
-  .mission-card:nth-child(2) .mission-num { color: var(--teal); }
-  .mission-card:nth-child(3) .mission-num { color: var(--violet); }
-  .mission-card:nth-child(4) .mission-num { color: var(--soft-violet); }
-  .mission-icon {
-    width: 48px; height: 48px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem; font-size: 1.3rem;
-  }
-  .mission-card:nth-child(1) .mission-icon { background: rgba(255, 107, 107, 0.1); }
-  .mission-card:nth-child(2) .mission-icon { background: rgba(0, 184, 148, 0.1); }
-  .mission-card:nth-child(3) .mission-icon { background: rgba(108, 92, 231, 0.1); }
-  .mission-card:nth-child(4) .mission-icon { background: rgba(162, 155, 254, 0.1); }
-  .mission-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 0.75rem; }
-  .mission-card p { font-size: 0.9rem; color: var(--dim-pearl); line-height: 1.6; }
-
-  /* How We Work */
-  .models-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem; }
-  .model-card {
-    background: var(--card-dark); border: 1px solid var(--border); border-radius: 16px;
-    padding: 2.5rem; position: relative; overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .model-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); }
-  .model-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-  .model-card:nth-child(1)::before { background: linear-gradient(90deg, var(--violet), var(--soft-violet)); }
-  .model-card:nth-child(2)::before { background: linear-gradient(90deg, var(--teal), #55efc4); }
-  .model-card-icon {
-    width: 52px; height: 52px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1.25rem; font-size: 1.5rem;
-  }
-  .model-card:nth-child(1) .model-card-icon { background: rgba(108, 92, 231, 0.12); }
-  .model-card:nth-child(2) .model-card-icon { background: rgba(0, 184, 148, 0.12); }
-  .model-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .model-card .tagline { font-size: 0.95rem; font-style: italic; color: var(--coral); margin-bottom: 1.25rem; }
-  .model-card ul { list-style: none; padding: 0; margin-bottom: 1.5rem; }
-  .model-card li {
-    position: relative; padding-left: 1.25rem; margin-bottom: 0.6rem;
-    font-size: 0.875rem; color: var(--dim-pearl); line-height: 1.5;
-  }
-  .model-card li::before {
-    content: ''; position: absolute; left: 0; top: 0.55rem;
-    width: 5px; height: 5px; border-radius: 50%;
-  }
-  .model-card:nth-child(1) li::before { background: var(--violet); }
-  .model-card:nth-child(2) li::before { background: var(--teal); }
-  .model-best {
-    font-size: 0.8rem; font-weight: 600; padding: 0.6rem 1rem;
-    border-radius: 8px; margin-bottom: 0.75rem;
-  }
-  .model-card:nth-child(1) .model-best {
-    color: var(--violet); background: rgba(108, 92, 231, 0.08); border: 1px solid rgba(108, 92, 231, 0.15);
-  }
-  .model-card:nth-child(2) .model-best {
-    color: var(--teal); background: rgba(0, 184, 148, 0.08); border: 1px solid rgba(0, 184, 148, 0.15);
-  }
-  .model-pricing { font-size: 0.8rem; color: var(--dim-pearl); line-height: 1.5; }
-
-  /* CTA / Contact */
-  .cta-section { text-align: center; padding: 8rem 0; position: relative; overflow: hidden; }
-  .cta-section::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(108, 92, 231, 0.1), transparent),
-      radial-gradient(ellipse 40% 40% at 30% 30%, rgba(255, 107, 107, 0.06), transparent);
-  }
-  .cta-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 800; line-height: 1.15; position: relative; z-index: 2;
-  }
-  .cta-email {
-    display: inline-flex; align-items: center; gap: 0.75rem;
-    font-size: 1.25rem; color: var(--pearl); text-decoration: none;
-    margin-top: 2rem; padding: 1rem 2rem;
-    background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.2);
-    border-radius: 12px; position: relative; z-index: 2; transition: all 0.3s;
-  }
-  .cta-email:hover { background: rgba(108, 92, 231, 0.18); border-color: var(--violet); transform: translateY(-2px); }
-  .cta-logo {
-    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem;
-    letter-spacing: 6px; color: var(--violet); margin-top: 2.5rem; position: relative; z-index: 2;
-  }
-
-  footer {
-    padding: 2rem; text-align: center; font-size: 0.8rem;
-    color: var(--light-slate); border-top: 1px solid var(--border);
-  }
-
-  .scroll-progress {
-    position: fixed; top: 0; left: 0; height: 3px;
-    background: linear-gradient(90deg, var(--violet), var(--coral));
-    z-index: 200; transition: width 0.1s linear;
-  }
-
-  /* Responsive */
-  @media (max-width: 968px) {
-    .pain-grid { grid-template-columns: repeat(2, 1fr); }
-    .cap-grid, .mission-grid, .models-grid { grid-template-columns: 1fr; }
-    .clients-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .nav-links.show {
-      display: flex; flex-direction: column;
-      position: absolute; top: 100%; left: 0; right: 0;
-      background: rgba(18, 16, 45, 0.97); padding: 1rem 2rem;
-      backdrop-filter: blur(20px);
+    :root {
+      --bg:        #FAFAF8;
+      --surface:   #F2F0EB;
+      --card:      #FFFFFF;
+      --card-deep: #F7F5F0;
+      --border:    rgba(100, 76, 20, 0.14);
+      --border-hi: rgba(100, 76, 20, 0.32);
+      --gold:      #8A6420;
+      --gold-pale: #A07830;
+      --gold-dim:  rgba(138, 100, 32, 0.1);
+      --gold-glow: rgba(138, 100, 32, 0.07);
+      --text:      #1A1610;
+      --text-soft: #4A443A;
+      --muted:     #8A8278;
+      --faint:     rgba(26, 22, 16, 0.05);
+      --red:       #A83020;
+      --radius:    3px;
     }
-    .mobile-toggle { display: block; }
-    .pain-grid { grid-template-columns: 1fr; }
-    .clients-grid { grid-template-columns: repeat(2, 1fr); }
-    .section { padding: 5rem 0; }
-    .container { padding: 0 1.25rem; }
-  }
-</style>
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Merriweather Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLL PROGRESS ── */
+    #progress {
+      position: fixed; top: 0; left: 0; height: 1.5px;
+      background: linear-gradient(90deg, var(--gold), rgba(138,100,32,0.3));
+      width: 0%; z-index: 9999; transition: width 0.08s linear;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 56px;
+      height: 64px;
+      background: rgba(250, 250, 248, 0.93);
+      border-bottom: 1px solid transparent;
+      backdrop-filter: blur(20px) saturate(1.2);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--border); }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      height: 32px; width: auto;
+    }
+    .nav-logo-text {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bg) !important;
+      background: var(--gold);
+      padding: 9px 22px;
+      text-decoration: none;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-pale); }
+
+    /* ── SECTION SKELETON ── */
+    section { position: relative; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 56px; }
+
+    .section-label {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    /* ═══════════════════════════════════════════
+       §1 HERO
+    ═══════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding-top: 64px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Background grid */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(26,22,16,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,22,16,0.05) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
+    }
+
+    /* Ambient glow */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -10%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(138,100,32,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      padding: 110px 56px 60px;
+      max-width: 1160px; margin: 0 auto; width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 80px;
+      align-items: center;
+    }
+
+    .hero-text-col {
+      display: flex; flex-direction: column;
+    }
+
+    .hero-logo-col {
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transform: scale(0.93) translateY(16px);
+      animation: fadeUp 1.1s 0.15s forwards;
+    }
+    .hero-logo-img {
+      width: 100%; max-width: 380px; height: auto;
+      filter: drop-shadow(0 8px 32px rgba(26,22,16,0.1));
+    }
+
+    .hero-eyebrow {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.7s 0.3s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.9s 0.45s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-tagline {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-soft);
+      margin-bottom: 44px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--gold);
+      padding: 16px 40px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.75s forwards;
+      align-self: flex-start;
+    }
+    .hero-cta:hover { background: var(--gold-pale); transform: translateY(-2px); }
+
+    /* ── LOGO MARQUEE ── */
+    .marquee-wrap {
+      margin-top: 80px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee-wrap::before,
+    .marquee-wrap::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0; width: 160px; z-index: 2;
+      pointer-events: none;
+    }
+    .marquee-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+    .marquee-wrap::after  { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+
+    .marquee-track {
+      display: flex; align-items: center; gap: 64px;
+      width: max-content;
+      animation: marquee 32s linear infinite;
+    }
+
+    .marquee-logo {
+      height: 40px; width: auto;
+      flex-shrink: 0;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .marquee-logo:hover { opacity: 1; }
+
+    .marquee-sep {
+      width: 1px; height: 28px; flex-shrink: 0;
+      background: var(--border);
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════
+       §2 CHALLENGES
+    ═══════════════════════════════════════════ */
+    #challenges {
+      padding: 140px 0;
+      background: var(--surface);
+    }
+
+    .section-header {
+      margin-bottom: 80px;
+    }
+    .section-title {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      max-width: 620px;
+      margin-top: 20px;
+    }
+
+    .stat-callout {
+      display: inline-flex; align-items: baseline; gap: 10px;
+      margin: 32px 0 48px;
+    }
+    .stat-number {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-style: italic;
+      max-width: 220px;
+    }
+
+    .pain-points {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .pain-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 36px 32px 32px;
+      position: relative;
+      cursor: default;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    }
+    .pain-item:last-child {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+    }
+    .pain-item:hover {
+      border-color: var(--border-hi);
+      box-shadow: 0 6px 28px var(--gold-glow);
+      transform: translateY(-2px);
+    }
+
+    .pain-icon {
+      width: 32px; height: 32px;
+      color: var(--gold);
+      margin-bottom: 20px;
+      flex-shrink: 0;
+      display: block;
+    }
+    .pain-item:last-child .pain-icon {
+      margin-bottom: 0;
+      margin-top: 2px;
+    }
+
+    .pain-num {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .pain-body {}
+    .pain-title {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .pain-text {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.75;
+      max-width: 560px;
+    }
+
+    .challenges-closing {
+      margin-top: 64px;
+      padding: 36px 44px;
+      border-left: 2px solid var(--gold);
+      background: var(--gold-glow);
+    }
+    .challenges-closing p {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text-soft);
+      line-height: 1.65;
+    }
+    .challenges-closing strong { color: var(--text); font-style: normal; font-weight: 400; }
+
+    /* ═══════════════════════════════════════════
+       §3 WHY GALVOR
+    ═══════════════════════════════════════════ */
+    #why {
+      padding: 140px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #why::before {
+      content: '';
+      position: absolute; top: 0; right: -200px; width: 700px; height: 700px;
+      background: radial-gradient(ellipse, rgba(138,100,32,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .vp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 72px;
+      background: var(--border);
+    }
+
+    .vp-card {
+      background: var(--card);
+      padding: 52px 48px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .vp-card:hover { background: var(--card-deep); }
+
+    .vp-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .vp-card:hover::after { transform: scaleX(1); }
+
+    .vp-index {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 5rem;
+      font-weight: 300;
+      color: var(--faint);
+      position: absolute; top: 24px; right: 36px;
+      line-height: 1;
+      transition: color 0.3s;
+    }
+    .vp-card:hover .vp-index { color: rgba(196,163,90,0.08); }
+
+    .vp-tag {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .vp-title {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .vp-lead {
+      font-size: 0.88rem;
+      color: var(--text-soft);
+      margin-bottom: 28px;
+      line-height: 1.75;
+    }
+
+    .vp-features {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .vp-features li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 0 12px;
+      font-size: 0.84rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+    .vp-features li::before {
+      content: '—';
+      color: var(--gold);
+      font-family: 'Merriweather Sans', sans-serif;
+      margin-top: 2px;
+    }
+    .vp-features strong { color: var(--text); font-weight: 400; }
+
+    .vp-example {
+      margin-top: 28px;
+      padding: 20px 24px;
+      background: rgba(138,100,32,0.05);
+      border-left: 2px solid rgba(138,100,32,0.28);
+    }
+    .vp-example p {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .why-closing {
+      margin-top: 72px;
+      text-align: center;
+    }
+    .why-closing p {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--text-soft);
+    }
+    .why-closing strong { color: var(--gold); font-style: normal; font-weight: 400; }
+
+    /* ═══════════════════════════════════════════
+       §4 WHAT WE OFFER
+    ═══════════════════════════════════════════ */
+    #offer {
+      padding: 140px 0;
+      background: var(--surface);
+    }
+
+    .phases-intro {
+      max-width: 600px;
+      margin-bottom: 80px;
+    }
+
+    .phases-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .phase-card {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .phase-header {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .phase-phase {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .phase-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .phase-tagline {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .phase-items {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .phase-item {
+      padding: 24px 20px;
+      border-left: 1px solid var(--border);
+    }
+    .phase-item-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .phase-item-text {
+      font-size: 0.82rem;
+      color: var(--text-soft);
+      line-height: 1.65;
+    }
+
+    .offer-closing {
+      margin-top: 80px;
+      padding: 52px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .offer-closing blockquote {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--text-soft);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    .offer-closing blockquote::before {
+      content: '"';
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 0.5;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    /* ═══════════════════════════════════════════
+       §5 CLIENTS
+    ═══════════════════════════════════════════ */
+    #clients {
+      padding: 140px 0;
+      position: relative;
+    }
+
+    .clients-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 80px;
+    }
+
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .logo-cell {
+      background: var(--card);
+      display: flex; align-items: center; justify-content: center;
+      padding: 44px 32px;
+      min-height: 110px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+      cursor: default;
+    }
+    .logo-cell::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--gold-glow);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .logo-cell:hover { background: var(--card-deep); }
+    .logo-cell:hover::after { opacity: 1; }
+
+    .logo-name {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      position: relative; z-index: 1;
+      transition: color 0.3s;
+    }
+    .logo-cell:hover .logo-name { color: var(--gold); }
+
+    .logo-img {
+      max-width: 143px; max-height: 53px;
+      width: auto; height: auto;
+      opacity: 0.9;
+      position: relative; z-index: 1;
+      transition: opacity 0.3s, transform 0.3s;
+      object-fit: contain;
+    }
+    .logo-cell:hover .logo-img { opacity: 1; transform: scale(1.05); }
+
+    /* ═══════════════════════════════════════════
+       §6 CONTACT
+    ═══════════════════════════════════════════ */
+    #contact {
+      padding: 140px 0;
+      background: var(--surface);
+      position: relative;
+    }
+    #contact::before {
+      content: '';
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(138,100,32,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: start;
+    }
+
+    .contact-left {}
+    .contact-intro {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-soft);
+      margin-top: 20px;
+      margin-bottom: 48px;
+      line-height: 1.75;
+    }
+
+    .contact-email-line {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 36px;
+    }
+    .email-line-bar { width: 32px; height: 1px; background: var(--gold); }
+    .email-link {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: opacity 0.2s;
+    }
+    .email-link:hover { opacity: 0.75; }
+
+    .contact-form {
+      display: flex; flex-direction: column; gap: 28px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-field {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .form-label {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-input {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+    .form-input::placeholder { color: var(--muted); }
+    .form-input:focus {
+      border-color: var(--gold);
+      background: var(--card-deep);
+    }
+
+    .form-submit {
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 18px 44px;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .form-submit:hover {
+      background: var(--gold-pale);
+      transform: translateY(-2px);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 48px 56px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .footer-copy {
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .footer-social {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .footer-social a {
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-social a:hover { color: var(--gold); }
+    .footer-social svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 28px; }
+      .nav-links { display: none; }
+      .container { padding: 0 28px; }
+      .hero-inner {
+        padding: 100px 28px 60px;
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .hero-logo-col { order: -1; }
+      .hero-logo-img { max-width: 240px; }
+      footer { padding: 40px 28px; }
+
+      .vp-grid { grid-template-columns: 1fr; }
+      .phase-card { grid-template-columns: 1fr; }
+      .phase-header { border-right: none; border-bottom: 1px solid var(--border); }
+      .phase-items { grid-template-columns: repeat(2, 1fr); }
+      .contact-grid { grid-template-columns: 1fr; gap: 60px; }
+      .logo-grid { grid-template-columns: repeat(3, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .pain-points { grid-template-columns: 1fr; }
+      .pain-item:last-child { flex-direction: column; gap: 16px; }
+      .clients-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    }
+
+    @media (max-width: 600px) {
+      .logo-grid { grid-template-columns: repeat(2, 1fr); }
+      .pain-icon { width: 28px; height: 28px; }
+      .phase-items { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="scroll-progress" id="scrollProgress"></div>
+<div id="progress"></div>
 
-<!-- NAV -->
-<nav id="mainNav">
-  <div class="nav-logo">GALVOR</div>
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    <img src="galvor_images/image16.png" alt="Galvor" class="nav-logo-icon" style="filter: brightness(0) saturate(100%) invert(70%) sepia(40%) saturate(400%) hue-rotate(10deg) brightness(95%);">
+    <span class="nav-logo-text">Galvor</span>
+  </a>
   <ul class="nav-links">
     <li><a href="#challenges">Challenges</a></li>
-    <li><a href="#platform">Platform</a></li>
-    <li><a href="#capabilities">Capabilities</a></li>
-    <li><a href="#advantage">Advantage</a></li>
-    <li><a href="#mission">Mission</a></li>
-    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    <li><a href="#why">Why Galvor</a></li>
+    <li><a href="#offer">Services</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact" class="nav-cta">Speak to us</a></li>
   </ul>
-  <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
-  <div class="container">
-    <div class="hero-badge reveal">
-      <span class="hero-badge-dot"></span>
-      AI-Powered Marketing Platform
+<!-- ═══════════════════════════════════════
+     §1 HERO
+═══════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text-col">
+      <p class="hero-eyebrow">End-to-end influencer campaigns</p>
+      <h1 class="hero-title">
+        We don't do<br>
+        <em>impressions.</em><br>
+        We do impact.
+      </h1>
+      <p class="hero-tagline">Built on AI, run by people who know creators.</p>
+      <a href="#contact" class="hero-cta">Speak to us</a>
     </div>
-    <h1 class="hero-title reveal reveal-delay-1">
-      Your AI-Powered<br>
-      <span class="gradient-text">Influencer Marketing</span><br>
-      Agency
-    </h1>
-    <p class="hero-desc reveal reveal-delay-2">
-      Data-driven creator discovery. AI-powered campaigns. Measurable results.
-    </p>
-    <div class="hero-actions reveal reveal-delay-3">
-      <a href="#contact" class="btn btn-primary">Get Started <span>&rarr;</span></a>
-      <a href="#platform" class="btn btn-outline">Explore Platform</a>
+    <div class="hero-logo-col">
+      <img src="galvor_images/image11.png" alt="Galvor" class="hero-logo-img">
+    </div>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marquee">
+      <img class="marquee-logo" src="galvor_images/image14.png" alt="Amazon">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image21.png" alt="AngelOne">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image15.png" alt="GMR">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image23.png" alt="MaisonX">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image17.png" alt="Xtend">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image25.png" alt="C4">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image22.png" alt="Pure Nutrition">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image20.png" alt="Physics Wallah">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image4.png" alt="Halo Care">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image13.png" alt="Blue Nectar">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image26.png" alt="LimeRoad">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image27.png" alt="Turtle">
+      <span class="marquee-sep"></span>
+      <!-- duplicate for seamless loop -->
+      <img class="marquee-logo" src="galvor_images/image14.png" alt="Amazon">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image21.png" alt="AngelOne">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image15.png" alt="GMR">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image23.png" alt="MaisonX">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image17.png" alt="Xtend">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image25.png" alt="C4">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image22.png" alt="Pure Nutrition">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image20.png" alt="Physics Wallah">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image4.png" alt="Halo Care">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image13.png" alt="Blue Nectar">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image26.png" alt="LimeRoad">
+      <span class="marquee-sep"></span>
+      <img class="marquee-logo" src="galvor_images/image27.png" alt="Turtle">
+      <span class="marquee-sep"></span>
     </div>
   </div>
 </section>
 
-<!-- PAIN POINTS -->
-<section class="section" id="challenges">
+<!-- ═══════════════════════════════════════
+     §2 CHALLENGES
+═══════════════════════════════════════ -->
+<section id="challenges">
   <div class="container">
-    <div class="section-label reveal">01 &mdash; The Challenge</div>
-    <h2 class="section-title reveal reveal-delay-1">Scaling Influencer Marketing<br>is Complex</h2>
-    <p class="section-subtitle reveal reveal-delay-2">Multiple steps, multiple pain points</p>
-    <div class="pain-grid">
-      <div class="pain-card reveal">
-        <div class="pain-icon">&#128269;</div>
-        <h3>Discovery &amp; Vetting</h3>
-        <p>Fake followers, fraud, and misaligned creators. Manual validation consumes valuable time.</p>
-      </div>
-      <div class="pain-card reveal reveal-delay-1">
-        <div class="pain-icon">&#129309;</div>
-        <h3>Outreach &amp; Negotiation</h3>
-        <p>Endless DMs/emails, slow replies, and risks of non-compliant communication.</p>
-      </div>
-      <div class="pain-card reveal reveal-delay-2">
-        <div class="pain-icon">&#128196;</div>
-        <h3>Contracting &amp; Fulfillment</h3>
-        <p>Fragmented tools, contract errors, and delays in product shipping.</p>
-      </div>
-      <div class="pain-card reveal reveal-delay-3">
-        <div class="pain-icon">&#128737;</div>
-        <h3>Content Creation &amp; QC</h3>
-        <p>Manual review of disclosures, logos, and brand safety. Risk of non-compliance.</p>
-      </div>
-      <div class="pain-card reveal reveal-delay-4">
-        <div class="pain-icon">&#9851;</div>
-        <h3>Content Repurposing</h3>
-        <p>High agency fees, slow adaptation into ad formats, limited localisation.</p>
-      </div>
-      <div class="pain-card reveal reveal-delay-5">
-        <div class="pain-icon">&#128200;</div>
-        <h3>Measurement &amp; ROI</h3>
-        <p>Data scattered across platforms, ROI measured post-campaign with no predictive insight.</p>
-      </div>
+    <div class="section-header reveal">
+      <h2 class="section-title">Influencer marketing<br>has a <em>trust problem.</em></h2>
+      <p class="section-subtitle">Brands spent over $21 billion on influencer marketing globally in 2024. Yet most marketing teams still can't answer a simple question at the end of a campaign: did it actually work?</p>
     </div>
+
+    <div class="pain-points">
+
+      <div class="pain-item reveal reveal-delay-1">
+        <!-- Icon: broken analytics -->
+        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          <line x1="2" y1="2" x2="22" y2="22"/>
+        </svg>
+        <span class="pain-num">01</span>
+        <p class="pain-title">You're flying blind on ROI</p>
+        <p class="pain-text">Vanity metrics don't tell you if a customer bought, downloaded, or walked in. Every campaign becomes an act of faith.</p>
+      </div>
+
+      <div class="pain-item reveal reveal-delay-1">
+        <!-- Icon: user with X (fake audience) -->
+        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+          <line x1="16" y1="2" x2="22" y2="8"/>
+          <line x1="22" y1="2" x2="16" y2="8"/>
+        </svg>
+        <span class="pain-num">02</span>
+        <p class="pain-title">The creator looked right. The audience wasn't.</p>
+        <p class="pain-text">800K followers means nothing if 60% are outside your market. Inflated counts and fake engagement go undetected manually.</p>
+      </div>
+
+      <div class="pain-item reveal reveal-delay-2">
+        <!-- Icon: briefcase (agency roster) -->
+        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <line x1="2" y1="14" x2="22" y2="14"/>
+        </svg>
+        <span class="pain-num">03</span>
+        <p class="pain-title">Your agency recommends who they know, not who fits</p>
+        <p class="pain-text">Most agencies pitch their existing roster — not the best fit for your brand. You get their Rolodex, not the market.</p>
+      </div>
+
+      <div class="pain-item reveal reveal-delay-2">
+        <!-- Icon: tangled network / chaos -->
+        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="5" cy="5" r="1.5"/><circle cx="19" cy="5" r="1.5"/>
+          <circle cx="5" cy="19" r="1.5"/><circle cx="19" cy="19" r="1.5"/>
+          <circle cx="12" cy="12" r="1.5"/>
+          <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
+          <line x1="5" y1="5" x2="12" y2="12"/><line x1="19" y1="5" x2="12" y2="12"/>
+          <line x1="12" y1="12" x2="5" y2="19"/><line x1="12" y1="12" x2="19" y2="19"/>
+        </svg>
+        <span class="pain-num">04</span>
+        <p class="pain-title">Execution is a coordination nightmare</p>
+        <p class="pain-text">Briefs, reviews, schedules, compliance, payments — running 15 creators eats your team alive. Deadlines slip. Quality suffers.</p>
+      </div>
+
+      <div class="pain-item reveal reveal-delay-3">
+        <!-- Icon: clock -->
+        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+          <path d="M17.5 3.5 L20.5 6.5" stroke-dasharray="2 2"/>
+        </svg>
+        <div class="pain-body">
+          <span class="pain-num">05</span>
+          <p class="pain-title">By the time the campaign launches, the moment has passed</p>
+          <p class="pain-text">Trends move in days. A campaign that takes 6 weeks to launch is already irrelevant before it starts.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="challenges-closing reveal">
+      <p>These aren't edge cases. They're <strong>the default experience of influencer marketing in 2026</strong> — and they're exactly what Galvor is built to fix.</p>
+    </div>
+
   </div>
 </section>
 
-<!-- INTRO DIVIDER -->
-<section class="intro-section">
+<!-- ═══════════════════════════════════════
+     §3 WHY GALVOR
+═══════════════════════════════════════ -->
+<section id="why">
   <div class="container">
-    <p class="section-subtitle reveal" style="text-align:center;margin:0 auto 0.5rem;color:var(--soft-violet);">Introducing</p>
-    <div class="intro-logo reveal reveal-delay-1">GALVOR</div>
-    <p class="intro-tagline reveal reveal-delay-2">AI-Powered Influencer Marketing Platform</p>
-    <div class="intro-line reveal reveal-delay-3"></div>
-  </div>
-</section>
-
-<!-- PLATFORM OVERVIEW -->
-<section class="section" id="platform">
-  <div class="container">
-    <div class="section-label reveal">02 &mdash; Platform</div>
-    <h2 class="section-title reveal reveal-delay-1">AI-Powered Influencer Marketing</h2>
-    <div class="legend reveal reveal-delay-2">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div> Galvor Managed</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Brand Owned</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--light-slate)"></div> Coming Soon</div>
+    <div class="section-header reveal">
+      <h2 class="section-title">Built for outcomes.<br><em>Powered by AI.</em></h2>
+      <p class="section-subtitle">Four things we do fundamentally differently.</p>
     </div>
 
-    <div class="phase-block reveal">
-      <div class="phase-header">
-        <span class="phase-num">PHASE 1</span>
-        <span class="phase-name">Strategy &amp; Planning</span>
-      </div>
-      <div class="phase-items">
-        <div class="phase-item brand"><div class="phase-item-name">Audience &amp; Messaging</div><div class="phase-item-desc">Define who you want to reach and the core brand message</div><div class="phase-item-tag brand-tag">BRAND</div></div>
-        <div class="phase-item coming"><div class="phase-item-name">Strategy &amp; Trend Intel</div><div class="phase-item-desc">Competition analysis and trend-driven campaign strategy</div><div class="phase-item-tag coming-tag">COMING SOON</div></div>
-        <div class="phase-item brand"><div class="phase-item-name">Budget &amp; Targets</div><div class="phase-item-desc">Set budgets, KPIs, and success metrics</div><div class="phase-item-tag brand-tag">BRAND</div></div>
-        <div class="phase-item coming"><div class="phase-item-name">Campaign Planning</div><div class="phase-item-desc">Inputs: Budget, TG, Messaging, Objectives &amp; Targets</div><div class="phase-item-tag coming-tag">COMING SOON</div></div>
-      </div>
-    </div>
+    <div class="vp-grid">
 
-    <div class="phase-block reveal">
-      <div class="phase-header">
-        <span class="phase-num">PHASE 2</span>
-        <span class="phase-name">Sourcing &amp; Onboarding</span>
-      </div>
-      <div class="phase-items">
-        <div class="phase-item"><div class="phase-item-name">Discovery &amp; Sourcing</div><div class="phase-item-desc">AI-powered creator search, vetting, and shortlisting</div><div class="phase-item-tag galvor">GALVOR</div></div>
-        <div class="phase-item coming"><div class="phase-item-name">Briefs &amp; Scripts</div><div class="phase-item-desc">Auto-generated briefs, scripts, and content guidelines</div><div class="phase-item-tag coming-tag">COMING SOON</div></div>
-        <div class="phase-item"><div class="phase-item-name">Reachout &amp; Negotiations</div><div class="phase-item-desc">Automated outreach, follow-ups, and deal negotiation</div><div class="phase-item-tag galvor">GALVOR</div></div>
-        <div class="phase-item"><div class="phase-item-name">Onboarding &amp; Contracting</div><div class="phase-item-desc">Contracts, compliance checks, and onboarding flows</div><div class="phase-item-tag galvor">GALVOR</div></div>
-      </div>
-    </div>
-
-    <div class="phase-block reveal">
-      <div class="phase-header">
-        <span class="phase-num">PHASE 3</span>
-        <span class="phase-name">Execution &amp; Performance</span>
-      </div>
-      <div class="phase-items">
-        <div class="phase-item"><div class="phase-item-name">Creator Coordination</div><div class="phase-item-desc">Shipping, content feedback, and post go-live management</div><div class="phase-item-tag galvor">GALVOR</div></div>
-        <div class="phase-item coming"><div class="phase-item-name">Content Production</div><div class="phase-item-desc">Creator produces content with brand review and approval</div><div class="phase-item-tag coming-tag">COMING SOON</div></div>
-        <div class="phase-item"><div class="phase-item-name">Campaign Tracking</div><div class="phase-item-desc">Real-time analytics, engagement, and ROI monitoring</div><div class="phase-item-tag galvor">GALVOR</div></div>
-        <div class="phase-item"><div class="phase-item-name">Creator Payments</div><div class="phase-item-desc">Automated invoicing and payment processing</div><div class="phase-item-tag galvor">GALVOR</div></div>
-      </div>
-    </div>
-
-    <div class="phase-block reveal">
-      <div class="phase-header">
-        <span class="phase-num">PHASE 4</span>
-        <span class="phase-name">Amplification</span>
-      </div>
-      <div class="phase-items">
-        <div class="phase-item coming"><div class="phase-item-name">Performance Marketing</div><div class="phase-item-desc">Boost top-performing creator content through paid amplification</div><div class="phase-item-tag coming-tag">COMING SOON</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SOURCING & ONBOARDING -->
-<section class="section" id="capabilities">
-  <div class="container">
-    <div class="section-label reveal">03 &mdash; Capabilities</div>
-    <h2 class="section-title reveal reveal-delay-1">Sourcing &amp; Onboarding</h2>
-    <p class="section-subtitle reveal reveal-delay-2">AI-powered discovery, rigorous vetting, seamless onboarding &mdash; at scale.</p>
-    <div class="cap-grid">
-      <div class="cap-card teal-accent reveal">
-        <div class="cap-card-icon">&#128269;</div>
-        <h3>Discovery &amp; Sourcing</h3>
-        <ul>
-          <li>AI-matched shortlists by persona, demographics, visual style</li>
-          <li>Beyond follower count &mdash; psychographics, content tone, brand affinity</li>
-          <li>Hand-picked precision at automation speed</li>
+      <!-- VP 1 -->
+      <div class="vp-card reveal reveal-delay-1">
+        <span class="vp-index">01</span>
+        <p class="vp-tag">Creator Selection</p>
+        <h3 class="vp-title">The Right Creator.<br>Not the Closest One.</h3>
+        <ul class="vp-features">
+          <li><span><strong>Demographic alignment</strong> — Age, gender, city match</span></li>
+          <li><span><strong>Content alignment</strong> — Tone and style fit</span></li>
+          <li><span><strong>Visual fit</strong> — Aesthetic consistency</span></li>
+          <li><span><strong>Engagement quality</strong> — Real followers only</span></li>
         </ul>
       </div>
-      <div class="cap-card teal-accent reveal reveal-delay-1">
-        <div class="cap-card-icon">&#128203;</div>
-        <h3>Briefs &amp; Scripts</h3>
-        <ul>
-          <li>Auto-generated briefs tailored to creator style &amp; audience</li>
-          <li>Ready-made scripts, talking points, content guidelines</li>
-          <li>Ensures consistent brand voice across all creators</li>
+
+      <!-- VP 2 -->
+      <div class="vp-card reveal reveal-delay-2">
+        <span class="vp-index">02</span>
+        <p class="vp-tag">Speed to Market</p>
+        <h3 class="vp-title">From Brief to Live<br>in Days, Not Weeks.</h3>
+        <ul class="vp-features">
+          <li><span><strong>Instant shortlisting</strong> — Creator lists in hours</span></li>
+          <li><span><strong>Bulk outreach</strong> — 50+ creators simultaneously</span></li>
+          <li><span><strong>Parallel workflows</strong> — Approvals run concurrently</span></li>
+          <li><span><strong>Template intelligence</strong> — Briefs auto-generated</span></li>
         </ul>
       </div>
-      <div class="cap-card teal-accent reveal reveal-delay-2">
-        <div class="cap-card-icon">&#129309;</div>
-        <h3>Reachout &amp; Negotiations</h3>
-        <ul>
-          <li>Automated outreach across DMs &amp; email at scale</li>
-          <li>Smart follow-ups and reply tracking</li>
-          <li>AI-assisted rate negotiations for best value</li>
+
+      <!-- VP 3 -->
+      <div class="vp-card reveal reveal-delay-1">
+        <span class="vp-index">03</span>
+        <p class="vp-tag">Attribution</p>
+        <h3 class="vp-title">Attribution That Actually<br>Answers the Question.</h3>
+        <ul class="vp-features">
+          <li><span><strong>Affiliate tracking</strong> — Unique links per creator</span></li>
+          <li><span><strong>Ad sales attribution</strong> — Meta and Google tracked</span></li>
+          <li><span><strong>Footfall attribution</strong> — In-store visits correlated</span></li>
+          <li><span><strong>Creator dashboards</strong> — Who drove what results</span></li>
         </ul>
       </div>
-      <div class="cap-card teal-accent reveal reveal-delay-3">
-        <div class="cap-card-icon">&#128196;</div>
-        <h3>Onboarding &amp; Contracting</h3>
-        <ul>
-          <li>Digital contracts with compliance checks built-in</li>
-          <li>Seamless creator onboarding workflows</li>
-          <li>Brand safety and legal compliance guaranteed</li>
+
+      <!-- VP 4 -->
+      <div class="vp-card reveal reveal-delay-2">
+        <span class="vp-index">04</span>
+        <p class="vp-tag">Scale</p>
+        <h3 class="vp-title">Scale Your Campaigns.<br>Not Your Headcount.</h3>
+        <ul class="vp-features">
+          <li><span><strong>New markets</strong> — Shortlists in hours</span></li>
+          <li><span><strong>Run more at once</strong> — Same operational overhead</span></li>
+          <li><span><strong>Reuse what works</strong> — Stored campaign playbooks</span></li>
+          <li><span><strong>Global</strong> — No local agency relationships needed</span></li>
         </ul>
       </div>
+
+    </div>
+
+    <div class="why-closing reveal">
+      <p>This is what end-to-end looks like when <strong>AI runs the infrastructure</strong> and humans run the strategy.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     §4 WHAT WE OFFER
+═══════════════════════════════════════ -->
+<section id="offer">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">We own outcomes,<br><em>not just processes.</em></h2>
+      <p class="section-subtitle">From the first brief to the last conversion — Galvor runs the full campaign lifecycle so your team can focus on the brand, not the operations.</p>
+    </div>
+
+    <div class="phases-grid">
+
+      <!-- Phase 1 -->
+      <div class="phase-card reveal reveal-delay-1">
+        <div class="phase-header">
+          <p class="phase-phase">Phase 01</p>
+          <p class="phase-title">Strategy &amp; Planning</p>
+          <p class="phase-tagline">Every campaign starts with clarity.</p>
+        </div>
+        <div class="phase-items">
+          <div class="phase-item">
+            <p class="phase-item-title">Audience &amp; Messaging</p>
+            <p class="phase-item-text">Target group defined by age, city, gender, and income.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Strategy &amp; Trend Intel</p>
+            <p class="phase-item-text">Category analysis and trend-driven campaign strategy.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Budget &amp; Targets</p>
+            <p class="phase-item-text">KPIs set around conversions and outcomes, not vanity metrics.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Campaign Planning</p>
+            <p class="phase-item-text">Creator tier mix, platform selection, formats, and timeline.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase-card reveal reveal-delay-2">
+        <div class="phase-header">
+          <p class="phase-phase">Phase 02</p>
+          <p class="phase-title">Sourcing &amp; Onboarding</p>
+          <p class="phase-tagline">The right creator is everything.</p>
+        </div>
+        <div class="phase-items">
+          <div class="phase-item">
+            <p class="phase-item-title">Discovery &amp; Sourcing</p>
+            <p class="phase-item-text">AI search filtered by demographics, engagement, and visual fit.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Briefs &amp; Scripts</p>
+            <p class="phase-item-text">Creator briefs that protect the brand and preserve their voice.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Outreach &amp; Negotiations</p>
+            <p class="phase-item-text">Personalised outreach to 50+ creators with rate benchmarking.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Onboarding &amp; Contracting</p>
+            <p class="phase-item-text">Contracts, KYC, compliance, and payment details — all handled.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase-card reveal reveal-delay-1">
+        <div class="phase-header">
+          <p class="phase-phase">Phase 03</p>
+          <p class="phase-title">Execution &amp; Performance</p>
+          <p class="phase-tagline">Campaigns fail at execution, not strategy.</p>
+        </div>
+        <div class="phase-items">
+          <div class="phase-item">
+            <p class="phase-item-title">Creator Coordination</p>
+            <p class="phase-item-text">Product dispatch, scheduling, and post go-live monitoring.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Content Production</p>
+            <p class="phase-item-text">Review and approval loop so nothing goes live unvetted.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Campaign Tracking</p>
+            <p class="phase-item-text">Real-time creator-level reach, engagement, and conversions.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Creator Payments</p>
+            <p class="phase-item-text">Milestone-based, automated. TDS compliant. No delays.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="phase-card reveal reveal-delay-2">
+        <div class="phase-header">
+          <p class="phase-phase">Phase 04</p>
+          <p class="phase-title">Amplification &amp; Measurement</p>
+          <p class="phase-tagline">A great campaign doesn't end at posting.</p>
+        </div>
+        <div class="phase-items">
+          <div class="phase-item">
+            <p class="phase-item-title">Performance Marketing</p>
+            <p class="phase-item-text">Top content amplified via paid media on Meta and Google.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Analytics Dashboard</p>
+            <p class="phase-item-text">ROAS, affiliate conversions, and promo redemptions in one view.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">ROI Measurement</p>
+            <p class="phase-item-text">Closed-loop attribution across links, ad sales, and footfall.</p>
+          </div>
+          <div class="phase-item">
+            <p class="phase-item-title">Insights &amp; Playbook</p>
+            <p class="phase-item-text">End-of-campaign debrief. Every campaign makes the next smarter.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="offer-closing reveal">
+      <blockquote>Most agencies hand you a report and call it done. Galvor hands you the next brief.</blockquote>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     §5 CLIENTS
+═══════════════════════════════════════ -->
+<section id="clients">
+  <div class="container">
+    <div class="clients-header reveal">
+      <div>
+        <h2 class="section-title">Brands that<br><em>chose outcomes.</em></h2>
+      </div>
+    </div>
+
+    <div class="logo-grid">
+      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image14.png" alt="Amazon"></div>
+      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image21.png" alt="AngelOne"></div>
+      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image15.png" alt="GMR"></div>
+      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image23.png" alt="MaisonX"></div>
+      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image17.png" alt="Xtend"></div>
+      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image25.png" alt="C4"></div>
+      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image22.png" alt="Pure Nutrition"></div>
+      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image20.png" alt="Physics Wallah"></div>
+      <div class="logo-cell reveal reveal-delay-3"><img class="logo-img" src="galvor_images/image4.png" alt="Halo Care"></div>
+      <div class="logo-cell reveal reveal-delay-3"><img class="logo-img" src="galvor_images/image13.png" alt="Blue Nectar"></div>
+      <div class="logo-cell reveal reveal-delay-4"><img class="logo-img" src="galvor_images/image26.png" alt="LimeRoad"></div>
+      <div class="logo-cell reveal reveal-delay-4"><img class="logo-img" src="galvor_images/image27.png" alt="Turtle"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     §6 CONTACT
+═══════════════════════════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+
+      <div class="contact-left reveal">
+        <h2 class="section-title">Ready to run<br><em>campaigns that count?</em></h2>
+        <p class="contact-intro">Tell us about your brand and we'll reach out within 24 hours to discuss how Galvor can work for your next campaign.</p>
+        <div class="contact-email-line">
+          <div class="email-line-bar"></div>
+          <a href="mailto:sales@galvor.com" class="email-link">sales@galvor.com</a>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="name">Full Name</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="email">Email Address</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="phone">Phone Number</label>
+              <input class="form-input" type="tel" id="phone" name="phone" placeholder="+91 00000 00000">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="company">Company Name</label>
+              <input class="form-input" type="text" id="company" name="company" placeholder="Your company" required>
+            </div>
+          </div>
+          <button type="submit" class="form-submit">Send Message</button>
+          <p id="form-msg" style="font-family:'Syne',sans-serif;font-size:0.72rem;color:var(--gold);opacity:0;transition:opacity 0.3s;margin-top:-8px;"></p>
+        </form>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- EXECUTION & PERFORMANCE -->
-<section class="section" id="execution">
-  <div class="container">
-    <div class="section-label reveal">04 &mdash; Execution</div>
-    <h2 class="section-title reveal reveal-delay-1">Execution &amp; Performance</h2>
-    <p class="section-subtitle reveal reveal-delay-2">Real-time coordination, live tracking, and creator payments &mdash; all in one loop.</p>
-    <div class="cap-grid">
-      <div class="cap-card coral-accent reveal">
-        <div class="cap-card-icon">&#128101;</div>
-        <h3>Creator Coordination</h3>
-        <ul>
-          <li>Shipping logistics, content feedback, post go-live management</li>
-          <li>Single dashboard for creator communication &amp; status tracking</li>
-          <li>Revisions handled fast &mdash; no back-and-forth chaos</li>
-        </ul>
-      </div>
-      <div class="cap-card coral-accent reveal reveal-delay-1">
-        <div class="cap-card-icon">&#9881;</div>
-        <h3>Content Production</h3>
-        <ul>
-          <li>Creator produces content with structured brand review &amp; approval</li>
-          <li>Multi-format delivery: reels, stories, posts, shorts</li>
-          <li>Quality control with AI-assisted compliance checks</li>
-        </ul>
-      </div>
-      <div class="cap-card coral-accent reveal reveal-delay-2">
-        <div class="cap-card-icon">&#128200;</div>
-        <h3>Campaign Tracking</h3>
-        <ul>
-          <li>Real-time analytics and engagement monitoring</li>
-          <li>ROI measured continuously, not just post-campaign</li>
-          <li>Predictive insights to optimize mid-flight</li>
-        </ul>
-      </div>
-      <div class="cap-card coral-accent reveal reveal-delay-3">
-        <div class="cap-card-icon">&#128176;</div>
-        <h3>Creator Payments</h3>
-        <ul>
-          <li>Automated invoicing and milestone-based payments</li>
-          <li>Transparent fee structure &mdash; no hidden margins</li>
-          <li>Payment processing for any scale of creators</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHY GALVOR -->
-<section class="why-section">
-  <div class="container">
-    <p class="section-subtitle reveal" style="text-align:center;margin:0 auto 0.5rem;color:var(--soft-violet);">Why</p>
-    <div class="intro-logo reveal reveal-delay-1">Galvor?</div>
-    <div class="intro-line reveal reveal-delay-2" style="background:var(--coral)"></div>
-  </div>
-</section>
-
-<!-- COMPARISON TABLE -->
-<section class="section" id="advantage">
-  <div class="container">
-    <div class="section-label reveal">05 &mdash; Advantage</div>
-    <h2 class="section-title reveal reveal-delay-1">Galvor Offers Significant Advantages</h2>
-    <div class="comparison-wrapper reveal reveal-delay-2">
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Traditional Agency</th>
-            <th>SaaS Platform (DIY)</th>
-            <th>Galvor (AI-Driven)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Creator Selection</td><td>Limited to agency's network. Biased towards known creators.</td><td>Large database but shallow filters. Brand does the homework.</td><td>AI scans the full universe. Picks best fit for your brand.</td></tr>
-          <tr><td>Launch Speed</td><td>4-6 weeks. Briefing, sourcing, back-and-forth.</td><td>Faster tools but brand runs ops &mdash; still weeks.</td><td>Days, not weeks. AI handles sourcing to onboarding in parallel.</td></tr>
-          <tr><td>ROI &amp; Matching</td><td>Gut-feel matching. Post-campaign reporting.</td><td>Data available but brand interprets it alone.</td><td>AI-driven persona matching. Demographics, visual fit, brand affinity.</td></tr>
-          <tr><td>Pricing</td><td>Opaque markups. Bundled retainers.</td><td>Transparent but brand negotiates alone.</td><td>Full pricing visibility. AI negotiates at scale, no hidden margins.</td></tr>
-          <tr><td>Communication</td><td>Account manager as bottleneck. Information gets filtered.</td><td>Direct but unmanaged. Brand chases creators.</td><td>AI-managed, brand-visible. Every conversation logged.</td></tr>
-          <tr><td>Scalability</td><td>More campaigns = more headcount = more cost.</td><td>Tools scale but your team doesn't.</td><td>AI scales infinitely. 10 or 500 creators, same speed and quality.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- CLIENTS -->
-<section class="section section-light" id="clients">
-  <div class="container">
-    <div class="section-label reveal" style="color:var(--coral)">Experience</div>
-    <h2 class="section-title reveal reveal-delay-1" style="color:var(--slate)">Experience Across Industries &amp; Scale</h2>
-    <div class="clients-grid">
-      <div class="client-card reveal"><img src="galvor_images/image14.png" alt="Amazon" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-1"><img src="galvor_images/image21.png" alt="AngelOne" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-1"><img src="galvor_images/image15.png" alt="GMR" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-2"><img src="galvor_images/image25.png" alt="C4 Original" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-2"><img src="galvor_images/image17.png" alt="Xtend" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-3"><img src="galvor_images/image13.png" alt="Blue Nectar" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-3"><img src="galvor_images/image20.png" alt="PW" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-3"><img src="galvor_images/image23.png" alt="MaisonX" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-4"><img src="galvor_images/image1.png" alt="Brand Studio India" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-4"><img src="galvor_images/image22.png" alt="Pure Nutrition" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-4"><img src="galvor_images/image18.png" alt="Tokyo Talkies" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-5"><img src="galvor_images/image24.png" alt="Highlander" loading="lazy"></div>
-      <div class="client-card reveal reveal-delay-5"><img src="galvor_images/image4.png" alt="Halo Care" loading="lazy"></div>
-    </div>
-  </div>
-</section>
-
-<!-- MISSION -->
-<section class="section" id="mission">
-  <div class="container">
-    <div class="section-label reveal">Our Mission</div>
-    <h2 class="section-title reveal reveal-delay-1">What Drives Us</h2>
-    <div class="mission-grid">
-      <div class="mission-card reveal">
-        <div class="mission-num">01</div>
-        <div class="mission-icon">&#128640;</div>
-        <h3>Transform Marketing</h3>
-        <p>Empower brands to create authentic connections, achieve bold objectives, and stay ahead in a rapidly evolving digital world.</p>
-      </div>
-      <div class="mission-card reveal reveal-delay-1">
-        <div class="mission-num">02</div>
-        <div class="mission-icon">&#128202;</div>
-        <h3>Leverage the Power of Data</h3>
-        <p>Unlock deep and hidden insights from data to help brands make smarter decisions and measurable success from Social Media &amp; Influencer Marketing.</p>
-      </div>
-      <div class="mission-card reveal reveal-delay-2">
-        <div class="mission-num">03</div>
-        <div class="mission-icon">&#128161;</div>
-        <h3>Innovate Fearlessly</h3>
-        <p>Redefine social media and influencer marketing with cutting-edge AI and forward-thinking solutions.</p>
-      </div>
-      <div class="mission-card reveal reveal-delay-3">
-        <div class="mission-num">04</div>
-        <div class="mission-icon">&#128101;</div>
-        <h3>Attract Extraordinary Talent</h3>
-        <p>Build a team of exceptional minds to solve the toughest marketing challenges and shape the future of the industry.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW WE WORK -->
-<section class="section" id="engagement">
-  <div class="container">
-    <div class="section-label reveal">06 &mdash; Engagement</div>
-    <h2 class="section-title reveal reveal-delay-1">How We Work</h2>
-    <p class="section-subtitle reveal reveal-delay-2">Choose how you want to work with us &mdash; full ownership or expert support</p>
-    <div class="models-grid">
-      <div class="model-card reveal">
-        <div class="model-card-icon">&#127942;</div>
-        <h3>End-to-End Campaign Ownership</h3>
-        <p class="tagline">"Hand us the budget. We deliver the results."</p>
-        <ul>
-          <li>Galvor owns the full campaign lifecycle &mdash; strategy to performance</li>
-          <li>Creator contracts directly with Galvor</li>
-          <li>We handle product shipping, creator payments, content review &amp; posting</li>
-          <li>Brand approves &mdash; Galvor executes everything else</li>
-        </ul>
-        <div class="model-best">Best for: Brands that want hands-off execution with full accountability</div>
-        <p class="model-pricing">Pricing: Campaign budget flows directly to Galvor &mdash; we manage creator payouts, logistics, and execution within it.</p>
-      </div>
-      <div class="model-card reveal reveal-delay-1">
-        <div class="model-card-icon">&#129309;</div>
-        <h3>Outsourced IM Associate</h3>
-        <p class="tagline">"Your campaign. Our AI muscle behind it."</p>
-        <ul>
-          <li>Creator contracts directly with the brand</li>
-          <li>Galvor discovers, vets &amp; onboards the right creators</li>
-          <li>Brand runs day-to-day &mdash; Galvor steps in when there's a bottleneck</li>
-          <li>AI-powered sourcing &amp; due diligence without giving up control</li>
-        </ul>
-        <div class="model-best">Best for: Brands with an in-house team that need scale and speed, not a full agency</div>
-        <p class="model-pricing">Pricing: Simple slab-based pricing tied to the number of creators sourced and onboarded. Scale up or down.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA / CONTACT -->
-<section class="cta-section" id="contact">
-  <div class="container">
-    <h2 class="cta-title reveal">
-      Let's Build Something<br>
-      <span class="gradient-text">Extraordinary</span>
-    </h2>
-    <div class="reveal reveal-delay-1" style="margin-top:0.5rem">
-      <a href="mailto:sales@galvor.com" class="cta-email">
-        <span style="font-size:1.5rem">&#9993;</span>
-        sales@galvor.com
-      </a>
-    </div>
-    <div class="cta-logo reveal reveal-delay-2">GALVOR</div>
-  </div>
-</section>
-
+<!-- ── FOOTER ── -->
 <footer>
-  <p>&copy; 2025 Galvor. All rights reserved.</p>
+  <span class="footer-logo">Galvor</span>
+  <span class="footer-copy">© 2026 Galvor. End-to-end influencer campaigns.</span>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/galvorai" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Instagram
+    </a>
+    <a href="https://www.linkedin.com/company/galvorai/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn
+    </a>
+  </div>
 </footer>
 
 <script>
-// Scroll-reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  /* ── SCROLL PROGRESS ── */
+  const bar = document.getElementById('progress');
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    bar.style.width = pct + '%';
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
 
-// Nav scroll
-const nav = document.getElementById('mainNav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 50);
-});
+  /* ── REVEAL ON SCROLL ── */
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
 
-// Scroll progress
-const progressBar = document.getElementById('scrollProgress');
-window.addEventListener('scroll', () => {
-  const scrollTop = document.documentElement.scrollTop;
-  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  progressBar.style.width = (scrollTop / scrollHeight) * 100 + '%';
-});
+  /* ── PHASE TOGGLE ── */
+  function togglePhase(header) {
+    const card = header.closest('.phase-card');
+    card.classList.toggle('open');
+  }
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+  /* ── FORM SUBMIT ── */
+  function handleSubmit(e) {
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
-
+    const msg = document.getElementById('form-msg');
+    msg.textContent = 'Thank you — we\'ll be in touch within 24 hours.';
+    msg.style.opacity = '1';
+    e.target.reset();
+    setTimeout(() => { msg.style.opacity = '0'; }, 5000);
+  }
 </script>
 
 </body>
