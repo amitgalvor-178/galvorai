@@ -343,19 +343,19 @@ nav{
 .fw-left h2{margin-bottom:14px}
 .fw-left .sec-sub{margin-bottom:28px}
 /* Flywheel visual */
-.flywheel-container{position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:0 auto}
+.flywheel-container{position:relative;width:100%;max-width:560px;aspect-ratio:1;margin:0 auto}
 .fw-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible}
 .fw-hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:17%;height:17%;border-radius:50%;background:var(--navy);border:2px solid rgba(43,78,255,0.5);box-shadow:0 0 0 8px rgba(43,78,255,0.05),0 0 0 18px rgba(43,78,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:2}
 .fw-hub-emoji{font-size:18px;display:block;line-height:1}
 .fw-hub-text{color:#7B9FFF;font-size:8px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;line-height:1.4;margin-top:4px}
-.fw-node{position:absolute;width:26%;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;box-shadow:var(--shadow-md);transform:translate(-50%,-50%);text-align:center;z-index:2}
+.fw-node{position:absolute;width:32%;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 14px;box-shadow:var(--shadow-md);transform:translate(-50%,-50%);text-align:center;z-index:2}
 .fw-n1{top:18.33%;left:50%}
-.fw-n2{top:50%;left:81.67%}
+.fw-n2{top:50%;left:83%}
 .fw-n3{top:81.67%;left:50%}
-.fw-n4{top:50%;left:18.33%}
-.fw-node-month{font-size:9px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
-.fw-node-title{font-size:10px;color:var(--text);line-height:1.45;font-weight:600;margin-bottom:5px}
-.fw-node-body{font-size:9px;color:var(--muted);line-height:1.5;margin-bottom:7px}
+.fw-n4{top:50%;left:17%}
+.fw-node-month{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.fw-node-title{font-size:11px;color:var(--text);line-height:1.45;font-weight:600;margin-bottom:5px}
+.fw-node-body{font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:7px}
 .fw-node-badge{display:inline-flex;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:5px;padding:2px 8px;font-size:9px;font-weight:600;color:var(--blue)}
 .fw-node-badge.green{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.2);color:#059669}
 @keyframes fw-dash{from{stroke-dashoffset:0}to{stroke-dashoffset:-1194}}
@@ -1205,8 +1205,8 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   <div class="flywheel-container">
     <svg class="fw-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <marker id="fw-arr" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-          <path d="M0 1 L0 7 L7 4 Z" fill="rgba(43,78,255,0.55)"/>
+        <marker id="fw-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+          <path d="M0 1 L0 9 L9 5 Z" fill="#2B4EFF"/>
         </marker>
       </defs>
       <!-- Soft glow band behind ring -->
@@ -1218,13 +1218,13 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
       <circle cx="300" cy="300" r="218" stroke="rgba(43,78,255,0.05)" stroke-width="1" fill="none"/>
       <!-- Arc arrows (clockwise, ~20° gap at each node) -->
       <!-- Top → Right -->
-      <path d="M 365,121 A 190,190 0 0,1 479,235" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <path d="M 365,121 A 190,190 0 0,1 479,235" stroke="#4D6EFF" stroke-opacity="0.7" stroke-width="2.5" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
       <!-- Right → Bottom -->
-      <path d="M 479,365 A 190,190 0 0,1 365,479" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <path d="M 479,365 A 190,190 0 0,1 365,479" stroke="#4D6EFF" stroke-opacity="0.7" stroke-width="2.5" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
       <!-- Bottom → Left -->
-      <path d="M 235,479 A 190,190 0 0,1 121,365" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <path d="M 235,479 A 190,190 0 0,1 121,365" stroke="#4D6EFF" stroke-opacity="0.7" stroke-width="2.5" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
       <!-- Left → Top -->
-      <path d="M 121,235 A 190,190 0 0,1 235,121" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <path d="M 121,235 A 190,190 0 0,1 235,121" stroke="#4D6EFF" stroke-opacity="0.7" stroke-width="2.5" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
       <!-- Node connector dots on ring -->
       <circle cx="300" cy="110" r="5" fill="#fff" stroke="#2B4EFF" stroke-width="2" opacity="0.7"/>
       <circle cx="490" cy="300" r="5" fill="#fff" stroke="#2B4EFF" stroke-width="2" opacity="0.7"/>
