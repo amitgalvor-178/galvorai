@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Galvor — The Creator Performance (Predictive RoAS) Company</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,sans-serif;color:#0F172A;background:#fff;line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+body{font-family:'Merriweather Sans',-apple-system,sans-serif;color:#0F172A;background:#fff;line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
 img{display:block;max-width:100%}
 
@@ -325,8 +325,14 @@ nav{
 .fictional-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#F59E0B;font-size:9px;padding:2px 8px;border-radius:8px;margin-bottom:8px}
 
 /* ── FLYWHEEL ────────────────────────────────────── */
+/* Flywheel layout */
+.fw-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.fw-left{display:flex;flex-direction:column;gap:0}
+.fw-left .sec-label{margin-bottom:12px}
+.fw-left h2{margin-bottom:14px}
+.fw-left .sec-sub{margin-bottom:28px}
 /* Flywheel visual */
-.flywheel-container{position:relative;width:100%;max-width:600px;aspect-ratio:1;margin:48px auto 0}
+.flywheel-container{position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:0 auto}
 .fw-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible}
 .fw-hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:17%;height:17%;border-radius:50%;background:var(--navy);border:2px solid rgba(43,78,255,0.5);box-shadow:0 0 0 8px rgba(43,78,255,0.05),0 0 0 18px rgba(43,78,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:2}
 .fw-hub-emoji{font-size:18px;display:block;line-height:1}
@@ -337,7 +343,8 @@ nav{
 .fw-n3{top:81.67%;left:50%}
 .fw-n4{top:50%;left:18.33%}
 .fw-node-month{font-size:9px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
-.fw-node-title{font-size:10px;color:var(--text);line-height:1.45;font-weight:500;margin-bottom:7px}
+.fw-node-title{font-size:10px;color:var(--text);line-height:1.45;font-weight:600;margin-bottom:5px}
+.fw-node-body{font-size:9px;color:var(--muted);line-height:1.5;margin-bottom:7px}
 .fw-node-badge{display:inline-flex;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:5px;padding:2px 8px;font-size:9px;font-weight:600;color:var(--blue)}
 .fw-node-badge.green{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.2);color:#059669}
 @keyframes fw-dash{from{stroke-dashoffset:0}to{stroke-dashoffset:-1194}}
@@ -458,6 +465,7 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   .results-grid{grid-template-columns:1fr}
 
   /* Flywheel */
+  .fw-layout{grid-template-columns:1fr;gap:36px}
   .flywheel-container{display:none}
   .fw-grid{display:flex}
   .fw-pause{flex-direction:column;gap:12px}
@@ -1133,9 +1141,22 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
 
 <!-- ═══ FLYWHEEL ═══════════════════════════════════════ -->
 <section class="sec alt">
-  <div class="sec-label">The flywheel</div>
-  <h2>Predictions sharpen every month.</h2>
-  <p class="sec-sub">Every campaign is a training event. This is a compounding data asset — not a monthly retainer you walk away from empty-handed.</p>
+  <div class="fw-layout">
+
+  <div class="fw-left">
+    <div class="sec-label">The flywheel</div>
+    <h2>Predictions sharpen every month.</h2>
+    <p class="sec-sub">Every campaign is a training event. This is a compounding data asset — not a monthly retainer you walk away from empty-handed.</p>
+    <div class="fw-pause">
+      <div class="fw-pause-icon">🔒</div>
+      <div>
+        <div class="fw-pause-title">What happens if you pause?</div>
+        <div class="fw-pause-body">The model you've built stays yours. Your data, creative intelligence, and Brand DNA are all retained. The managed service can pause — your data asset doesn't disappear.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fw-right">
 
   <!-- Desktop: circular flywheel -->
   <div class="flywheel-container">
@@ -1178,6 +1199,7 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
     <div class="fw-node fw-n1">
       <div class="fw-node-month">Month 1</div>
       <div class="fw-node-title">Data instrumented. First patterns visible.</div>
+      <div class="fw-node-body">Creative history tagged, Brand DNA synthesised, competitor landscape mapped.</div>
       <span class="fw-node-badge">Baseline</span>
     </div>
 
@@ -1185,6 +1207,7 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
     <div class="fw-node fw-n2">
       <div class="fw-node-month">Month 3</div>
       <div class="fw-node-title">Hook-format matrix live. Creator scoring active.</div>
+      <div class="fw-node-body">Creators scored against your model — not generic benchmarks.</div>
       <span class="fw-node-badge">First insights</span>
     </div>
 
@@ -1192,6 +1215,7 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
     <div class="fw-node fw-n3">
       <div class="fw-node-month">Month 6</div>
       <div class="fw-node-title">80% confidence. RoAS within 0.3× of forecast.</div>
+      <div class="fw-node-body">Most brands see their biggest RoAS improvements starting here.</div>
       <span class="fw-node-badge green">Inflection point</span>
     </div>
 
@@ -1199,6 +1223,7 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
     <div class="fw-node fw-n4">
       <div class="fw-node-month">Month 12+</div>
       <div class="fw-node-title">Compounding advantage. Gap from competitors widens.</div>
+      <div class="fw-node-body">12 months of training no competitor can quickly replicate.</div>
       <span class="fw-node-badge green">Sustainable moat</span>
     </div>
   </div>
@@ -1231,13 +1256,8 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
     </div>
   </div>
 
-  <div class="fw-pause">
-    <div class="fw-pause-icon">🔒</div>
-    <div>
-      <div class="fw-pause-title">What happens if you pause?</div>
-      <div class="fw-pause-body">The model you've built stays yours. Your data, creative intelligence, and Brand DNA are all retained. The managed service can pause — your data asset doesn't disappear.</div>
-    </div>
-  </div>
+  </div><!-- fw-right -->
+  </div><!-- fw-layout -->
 </section>
 
 <!-- ═══ ICP ════════════════════════════════════════════ -->
