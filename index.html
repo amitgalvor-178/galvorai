@@ -325,15 +325,31 @@ nav{
 .fictional-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#F59E0B;font-size:9px;padding:2px 8px;border-radius:8px;margin-bottom:8px}
 
 /* ── FLYWHEEL ────────────────────────────────────── */
-.fw-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.fw-phase{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
-.fw-phase::after{content:attr(data-n);position:absolute;right:16px;top:10px;font-size:64px;font-weight:700;color:rgba(43,78,255,0.04);line-height:1;pointer-events:none}
-.fw-time{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
-.fw-title{font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.3}
+/* Flywheel visual */
+.flywheel-container{position:relative;width:100%;max-width:600px;aspect-ratio:1;margin:48px auto 0}
+.fw-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible}
+.fw-hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:17%;height:17%;border-radius:50%;background:var(--navy);border:2px solid rgba(43,78,255,0.5);box-shadow:0 0 0 8px rgba(43,78,255,0.05),0 0 0 18px rgba(43,78,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:2}
+.fw-hub-emoji{font-size:18px;display:block;line-height:1}
+.fw-hub-text{color:#7B9FFF;font-size:8px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;line-height:1.4;margin-top:4px}
+.fw-node{position:absolute;width:26%;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;box-shadow:var(--shadow-md);transform:translate(-50%,-50%);text-align:center;z-index:2}
+.fw-n1{top:18.33%;left:50%}
+.fw-n2{top:50%;left:81.67%}
+.fw-n3{top:81.67%;left:50%}
+.fw-n4{top:50%;left:18.33%}
+.fw-node-month{font-size:9px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.fw-node-title{font-size:10px;color:var(--text);line-height:1.45;font-weight:500;margin-bottom:7px}
+.fw-node-badge{display:inline-flex;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:5px;padding:2px 8px;font-size:9px;font-weight:600;color:var(--blue)}
+.fw-node-badge.green{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.2);color:#059669}
+@keyframes fw-dash{from{stroke-dashoffset:0}to{stroke-dashoffset:-1194}}
+/* Mobile fallback cards */
+.fw-grid{display:none;flex-direction:column;gap:12px;margin-top:24px}
+.fw-phase{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow)}
+.fw-time{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.fw-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
 .fw-body{font-size:13px;color:var(--muted);line-height:1.6}
-.fw-metric{display:inline-flex;align-items:center;gap:5px;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:6px;padding:4px 10px;margin-top:12px;font-size:11px;color:var(--blue);font-weight:600}
+.fw-metric{display:inline-flex;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:6px;padding:3px 10px;margin-top:10px;font-size:11px;color:var(--blue);font-weight:600}
 .fw-metric.green{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.2);color:#059669}
-.fw-pause{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-top:16px;display:flex;gap:18px;align-items:center;box-shadow:var(--shadow)}
+.fw-pause{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-top:24px;display:flex;gap:18px;align-items:center;box-shadow:var(--shadow)}
 .fw-pause-icon{font-size:22px;flex-shrink:0}
 .fw-pause-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
 .fw-pause-body{font-size:13px;color:var(--muted);line-height:1.6}
@@ -442,7 +458,8 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   .results-grid{grid-template-columns:1fr}
 
   /* Flywheel */
-  .fw-grid{grid-template-columns:1fr}
+  .flywheel-container{display:none}
+  .fw-grid{display:flex}
   .fw-pause{flex-direction:column;gap:12px}
 
   /* Who it's for */
@@ -1120,29 +1137,96 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   <h2>Predictions sharpen every month.</h2>
   <p class="sec-sub">Every campaign is a training event. This is a compounding data asset — not a monthly retainer you walk away from empty-handed.</p>
 
+  <!-- Desktop: circular flywheel -->
+  <div class="flywheel-container">
+    <svg class="fw-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="fw-arr" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+          <path d="M0 1 L0 7 L7 4 Z" fill="rgba(43,78,255,0.55)"/>
+        </marker>
+      </defs>
+      <!-- Soft glow band behind ring -->
+      <circle cx="300" cy="300" r="190" stroke="rgba(43,78,255,0.04)" stroke-width="52" fill="none"/>
+      <!-- Animated dashed ring -->
+      <circle cx="300" cy="300" r="190" stroke="rgba(43,78,255,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="8 6" style="animation:fw-dash 10s linear infinite"/>
+      <!-- Depth rings -->
+      <circle cx="300" cy="300" r="162" stroke="rgba(43,78,255,0.05)" stroke-width="1" fill="none"/>
+      <circle cx="300" cy="300" r="218" stroke="rgba(43,78,255,0.05)" stroke-width="1" fill="none"/>
+      <!-- Arc arrows (clockwise, ~20° gap at each node) -->
+      <!-- Top → Right -->
+      <path d="M 365,121 A 190,190 0 0,1 479,235" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <!-- Right → Bottom -->
+      <path d="M 479,365 A 190,190 0 0,1 365,479" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <!-- Bottom → Left -->
+      <path d="M 235,479 A 190,190 0 0,1 121,365" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <!-- Left → Top -->
+      <path d="M 121,235 A 190,190 0 0,1 235,121" stroke="rgba(43,78,255,0.45)" stroke-width="2" fill="none" marker-end="url(#fw-arr)" stroke-linecap="round"/>
+      <!-- Node connector dots on ring -->
+      <circle cx="300" cy="110" r="5" fill="#fff" stroke="#2B4EFF" stroke-width="2" opacity="0.7"/>
+      <circle cx="490" cy="300" r="5" fill="#fff" stroke="#2B4EFF" stroke-width="2" opacity="0.7"/>
+      <circle cx="300" cy="490" r="5" fill="#fff" stroke="#2B4EFF" stroke-width="2" opacity="0.7"/>
+      <circle cx="110" cy="300" r="5" fill="#fff" stroke="#2B4EFF" stroke-width="2" opacity="0.7"/>
+    </svg>
+
+    <!-- Center hub -->
+    <div class="fw-hub">
+      <span class="fw-hub-emoji">🔄</span>
+      <div class="fw-hub-text">Galvor<br>Model</div>
+    </div>
+
+    <!-- Month 1 — top -->
+    <div class="fw-node fw-n1">
+      <div class="fw-node-month">Month 1</div>
+      <div class="fw-node-title">Data instrumented. First patterns visible.</div>
+      <span class="fw-node-badge">Baseline</span>
+    </div>
+
+    <!-- Month 3 — right -->
+    <div class="fw-node fw-n2">
+      <div class="fw-node-month">Month 3</div>
+      <div class="fw-node-title">Hook-format matrix live. Creator scoring active.</div>
+      <span class="fw-node-badge">First insights</span>
+    </div>
+
+    <!-- Month 6 — bottom -->
+    <div class="fw-node fw-n3">
+      <div class="fw-node-month">Month 6</div>
+      <div class="fw-node-title">80% confidence. RoAS within 0.3× of forecast.</div>
+      <span class="fw-node-badge green">Inflection point</span>
+    </div>
+
+    <!-- Month 12+ — left -->
+    <div class="fw-node fw-n4">
+      <div class="fw-node-month">Month 12+</div>
+      <div class="fw-node-title">Compounding advantage. Gap from competitors widens.</div>
+      <span class="fw-node-badge green">Sustainable moat</span>
+    </div>
+  </div>
+
+  <!-- Mobile fallback: stacked list -->
   <div class="fw-grid">
-    <div class="fw-phase" data-n="1">
+    <div class="fw-phase">
       <div class="fw-time">Month 1</div>
       <div class="fw-title">Your data is instrumented. First patterns visible.</div>
-      <div class="fw-body">Creative history tagged, Brand DNA synthesised, competitor landscape mapped. First recommendations from your data — not category averages.</div>
+      <div class="fw-body">Creative history tagged, Brand DNA synthesised, competitor landscape mapped.</div>
       <span class="fw-metric">Baseline established</span>
     </div>
-    <div class="fw-phase" data-n="3">
+    <div class="fw-phase">
       <div class="fw-time">Month 3</div>
       <div class="fw-title">Hook-format matrix live. Creator scoring active.</div>
-      <div class="fw-body">Enough data to rank creative combinations with confidence. Creators now scored against your model specifically — not generic benchmarks.</div>
+      <div class="fw-body">Enough data to rank creative combinations with confidence.</div>
       <span class="fw-metric">First cluster insights</span>
     </div>
-    <div class="fw-phase" data-n="6">
+    <div class="fw-phase">
       <div class="fw-time">Month 6</div>
       <div class="fw-title">80% confidence. RoAS within 0.3× of forecast.</div>
-      <div class="fw-body">Pre-spend forecasts reach 80% confidence. This is the inflection point — most brands see their biggest RoAS improvements starting here.</div>
+      <div class="fw-body">Pre-spend forecasts reach 80% confidence. Inflection point.</div>
       <span class="fw-metric green">Inflection point</span>
     </div>
-    <div class="fw-phase" data-n="12">
+    <div class="fw-phase">
       <div class="fw-time">Month 12+</div>
       <div class="fw-title">Compounding advantage. Gap from competitors widens.</div>
-      <div class="fw-body">12 months of model training no competitor can quickly replicate. Every campaign makes predictions sharper. The model is yours — permanently.</div>
+      <div class="fw-body">12 months of model training no competitor can quickly replicate.</div>
       <span class="fw-metric green">Sustainable moat</span>
     </div>
   </div>
