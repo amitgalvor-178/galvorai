@@ -129,11 +129,22 @@ nav{
 .prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .prob-card{
   background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:30px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  padding:28px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  cursor:pointer;transition:border-color .2s,box-shadow .2s;
 }
+.prob-card:hover{border-color:rgba(43,78,255,0.22);box-shadow:var(--shadow-md)}
+.prob-card.prob-open{border-color:rgba(43,78,255,0.28);box-shadow:var(--shadow-md)}
 .prob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
-.prob-num{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
-.prob-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.25}
+.prob-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.prob-toggle{width:26px;height:26px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:300;color:var(--muted);flex-shrink:0;transition:transform .25s,background .2s,color .2s;margin-top:2px;line-height:1;user-select:none}
+.prob-card.prob-open .prob-toggle{transform:rotate(45deg);background:var(--blue-dim);border-color:var(--blue-border);color:var(--blue)}
+.prob-num{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.prob-title{font-size:18px;font-weight:600;color:var(--text);line-height:1.25}
+.prob-expand{display:none;margin-top:18px;animation:prob-fade .3s ease}
+.prob-card.prob-open .prob-expand{display:block}
+@keyframes prob-fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.prob-img{width:100%;border-radius:var(--radius);margin-bottom:14px;display:block;object-fit:cover;max-height:220px}
+.prob-img[src=""]{display:none}
 .prob-body{font-size:14px;color:var(--muted);line-height:1.65}
 .prob-stat{display:inline-flex;align-items:center;gap:6px;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:6px;padding:5px 11px;margin-top:14px;font-size:11px;color:var(--blue);font-weight:600}
 
@@ -625,31 +636,63 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   <div class="prob-grid">
 
     <div class="prob-card">
-      <div class="prob-num">01 — Creative Fatigue</div>
-      <div class="prob-title">The same 3 formats run across every brand</div>
-      <div class="prob-body">Outfit transition with a beat drop. Try-on haul with trending audio. GRWM with a discount code at the end. Meta audiences have seen all three thousands of times. The thumb doesn't stop anymore. And creative fatigue hits in as little as 10–14 days — most brands don't have enough volume to survive the cycle.</div>
-      <span class="prob-stat">10–14 day creative shelf life in active accounts</span>
+      <div class="prob-header">
+        <div>
+          <div class="prob-num">01 — Creative Fatigue</div>
+          <div class="prob-title">The same 3 formats run across every brand</div>
+        </div>
+        <div class="prob-toggle">+</div>
+      </div>
+      <div class="prob-expand">
+        <img src="" alt="Creative Fatigue" class="prob-img">
+        <div class="prob-body">Outfit transition with a beat drop. Try-on haul with trending audio. GRWM with a discount code at the end. Meta audiences have seen all three thousands of times. The thumb doesn't stop anymore. And creative fatigue hits in as little as 10–14 days — most brands don't have enough volume to survive the cycle.</div>
+        <span class="prob-stat">10–14 day creative shelf life in active accounts</span>
+      </div>
     </div>
 
     <div class="prob-card">
-      <div class="prob-num">02 — The Measurement Trap</div>
-      <div class="prob-title">Hook rate is up. Revenue is flat.</div>
-      <div class="prob-body">The creative stops the thumb. Views look strong. But watch time falls off a cliff at 5–8 seconds — and that's where purchase intent lives. Brands celebrate view counts while hold rate bleeds out mid-reel. The CTA arrives at 25–30 seconds. By then 60–70% of cold audience viewers have already scrolled.</div>
-      <span class="prob-stat">60–70% of cold audiences gone by second 15</span>
+      <div class="prob-header">
+        <div>
+          <div class="prob-num">02 — The Measurement Trap</div>
+          <div class="prob-title">Hook rate is up. Revenue is flat.</div>
+        </div>
+        <div class="prob-toggle">+</div>
+      </div>
+      <div class="prob-expand">
+        <img src="" alt="Measurement Trap" class="prob-img">
+        <div class="prob-body">The creative stops the thumb. Views look strong. But watch time falls off a cliff at 5–8 seconds — and that's where purchase intent lives. Brands celebrate view counts while hold rate bleeds out mid-reel. The CTA arrives at 25–30 seconds. By then 60–70% of cold audience viewers have already scrolled.</div>
+        <span class="prob-stat">60–70% of cold audiences gone by second 15</span>
+      </div>
     </div>
 
     <div class="prob-card">
-      <div class="prob-num">03 — Creator Selection</div>
-      <div class="prob-title">Aesthetic fit is not audience fit</div>
-      <div class="prob-body">A creator's feed looks on-brand. The color palette matches. The styling feels right. But their audience may be 60% male, tier-3 cities, aged 18–22 — completely misaligned with your core buyer. No one filters by audience demographics, talking head performance, or product category depth. Aesthetic selection is costing RoAS.</div>
-      <span class="prob-stat">Briefs are mood boards, not performance directions</span>
+      <div class="prob-header">
+        <div>
+          <div class="prob-num">03 — Creator Selection</div>
+          <div class="prob-title">Aesthetic fit is not audience fit</div>
+        </div>
+        <div class="prob-toggle">+</div>
+      </div>
+      <div class="prob-expand">
+        <img src="" alt="Creator Selection" class="prob-img">
+        <div class="prob-body">A creator's feed looks on-brand. The color palette matches. The styling feels right. But their audience may be 60% male, tier-3 cities, aged 18–22 — completely misaligned with your core buyer. No one filters by audience demographics, talking head performance, or product category depth. Aesthetic selection is costing RoAS.</div>
+        <span class="prob-stat">Briefs are mood boards, not performance directions</span>
+      </div>
     </div>
 
     <div class="prob-card">
-      <div class="prob-num">04 — Zero Prediction</div>
-      <div class="prob-title">You find out what worked after you spent</div>
-      <div class="prob-body">Your best creative insight — which hook, which format, which creator archetype — arrives in the post-campaign report. By then the budget is gone. No one tells you what will win before you commit. No confidence intervals. No pre-spend RoAS forecast. Just variance you can't control and reports that arrive too late.</div>
-      <span class="prob-stat">RoAS is reported, never predicted</span>
+      <div class="prob-header">
+        <div>
+          <div class="prob-num">04 — Zero Prediction</div>
+          <div class="prob-title">You find out what worked after you spent</div>
+        </div>
+        <div class="prob-toggle">+</div>
+      </div>
+      <div class="prob-expand">
+        <img src="" alt="Zero Prediction" class="prob-img">
+        <div class="prob-body">Your best creative insight — which hook, which format, which creator archetype — arrives in the post-campaign report. By then the budget is gone. No one tells you what will win before you commit. No confidence intervals. No pre-spend RoAS forecast. Just variance you can't control and reports that arrive too late.</div>
+        <span class="prob-stat">RoAS is reported, never predicted</span>
+      </div>
     </div>
 
   </div>
@@ -1352,6 +1395,11 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
 </footer>
 
 <script>
+  // Problem cards expand/collapse
+  document.querySelectorAll('.prob-card').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('prob-open'));
+  });
+
   // Platform section click-to-reveal
   const pfItems = document.querySelectorAll('.pf-item[data-feature]');
   const pfScreens = document.querySelectorAll('.pf-screen-wrap');
