@@ -155,7 +155,7 @@ nav{
 .badge-purple{background:rgba(139,92,246,0.08);color:#7C3AED}
 .badge-amber{background:rgba(245,158,11,0.07);color:#B45309}
 .os-layer-desc{font-size:13px;color:var(--muted);line-height:1.65}
-.os-right-panel{border-radius:var(--radius-lg);position:sticky;top:80px;min-height:260px;display:flex;flex-direction:column;justify-content:center}
+.os-right-panel{background:var(--navy);border-radius:var(--radius-lg);padding:32px;position:sticky;top:80px}
 .os-img-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:2px dashed var(--border);border-radius:var(--radius-lg);padding:56px 32px;text-align:center;color:var(--faint);font-size:13px;transition:opacity .2s}
 .os-img-empty-icon{font-size:28px;opacity:0.4}
 .os-img-slot{display:none;animation:os-fade .35s ease}
@@ -211,8 +211,15 @@ nav{
 /* ── PLATFORM (combined with deliverables) ─────── */
 .platform-layout{display:grid;grid-template-columns:320px 1fr;gap:48px;align-items:start}
 .platform-features{display:flex;flex-direction:column;gap:2px}
-.pf-item{display:flex;gap:14px;padding:15px 14px;border-radius:10px;transition:background .15s;cursor:default}
-.pf-item:hover,.pf-item.active{background:var(--bg2)}
+.pf-item{display:flex;gap:14px;padding:15px 14px;border-radius:10px;transition:background .15s,border-color .15s;cursor:pointer;border-left:2px solid transparent}
+.pf-item:hover{background:var(--bg2)}
+.pf-item.pf-selected{background:var(--blue-dim);border-left-color:var(--blue)}
+.pf-screen-area{position:sticky;top:80px}
+.pf-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:2px dashed var(--border);border-radius:var(--radius-lg);padding:80px 32px;text-align:center;color:var(--faint);font-size:13px;min-height:320px}
+.pf-empty-state-icon{font-size:28px;opacity:0.4}
+.pf-screen-wrap{display:none;animation:pf-fade .3s ease}
+.pf-screen-wrap.pf-visible{display:block}
+@keyframes pf-fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .pf-icon{width:36px;height:36px;border-radius:8px;background:var(--blue-dim);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:1px}
 .pf-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
 .pf-body{font-size:12px;color:var(--muted);line-height:1.55}
@@ -632,29 +639,7 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   <div class="os-layout">
     <div class="os-layers">
 
-      <div class="os-layer-item" data-layer="1">
-        <div class="os-layer-icon li-blue">🧠</div>
-        <div>
-          <div class="os-layer-head">
-            <span class="os-layer-title">Prediction layer</span>
-            <span class="os-layer-badge badge-blue">AI model</span>
-          </div>
-          <div class="os-layer-desc">Pre-spend RoAS forecasting with confidence intervals. Creative scoring and creator ranking — trained exclusively on your campaign history, not network averages from other brands.</div>
-        </div>
-      </div>
-
-      <div class="os-layer-item" data-layer="2">
-        <div class="os-layer-icon li-green">⚙️</div>
-        <div>
-          <div class="os-layer-head">
-            <span class="os-layer-title">Execution layer</span>
-            <span class="os-layer-badge badge-green">Managed service</span>
-          </div>
-          <div class="os-layer-desc">Creator discovery, brief writing, negotiation, contracting, posting, tracking, and reporting — all operated by Galvor. Your team reviews and approves. We run everything else.</div>
-        </div>
-      </div>
-
-      <div class="os-layer-item" data-layer="3">
+      <div class="os-layer-item">
         <div class="os-layer-icon li-purple">🔭</div>
         <div>
           <div class="os-layer-head">
@@ -665,7 +650,29 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
         </div>
       </div>
 
-      <div class="os-layer-item" data-layer="4">
+      <div class="os-layer-item">
+        <div class="os-layer-icon li-blue">🧠</div>
+        <div>
+          <div class="os-layer-head">
+            <span class="os-layer-title">Prediction layer</span>
+            <span class="os-layer-badge badge-blue">AI model</span>
+          </div>
+          <div class="os-layer-desc">Pre-spend RoAS forecasting with confidence intervals. Creative scoring and creator ranking — trained exclusively on your campaign history, not network averages from other brands.</div>
+        </div>
+      </div>
+
+      <div class="os-layer-item">
+        <div class="os-layer-icon li-green">⚙️</div>
+        <div>
+          <div class="os-layer-head">
+            <span class="os-layer-title">Execution layer</span>
+            <span class="os-layer-badge badge-green">Managed service</span>
+          </div>
+          <div class="os-layer-desc">Creator discovery, brief writing, negotiation, contracting, posting, tracking, and reporting — all operated by Galvor. Your team reviews and approves. We run everything else.</div>
+        </div>
+      </div>
+
+      <div class="os-layer-item">
         <div class="os-layer-icon li-amber">🔄</div>
         <div>
           <div class="os-layer-head">
@@ -679,22 +686,49 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
     </div>
 
     <div class="os-right-panel">
-      <div class="os-img-empty" id="os-empty">
-        <div class="os-img-empty-icon">☝️</div>
-        <span>Click any layer to see more</span>
-      </div>
-      <div class="os-img-slot" data-slot="1">
-        <img src="" alt="Prediction layer">
-      </div>
-      <div class="os-img-slot" data-slot="2">
-        <img src="" alt="Execution layer">
-      </div>
-      <div class="os-img-slot" data-slot="3">
-        <img src="" alt="Intelligence layer">
-      </div>
-      <div class="os-img-slot" data-slot="4">
-        <img src="" alt="Compounding layer">
-      </div>
+      <div class="orp-head">How Galvor compares</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>What you need</th>
+            <th>Agency</th>
+            <th>SaaS tool</th>
+            <th>Galvor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hl">
+            <td>Pre-spend RoAS forecast</td>
+            <td class="td-lose">✗</td>
+            <td class="td-lose">✗</td>
+            <td class="td-win">✓</td>
+          </tr>
+          <tr>
+            <td>Model on your data</td>
+            <td class="td-lose">✗</td>
+            <td class="td-lose">Network avg</td>
+            <td class="td-win">✓</td>
+          </tr>
+          <tr class="hl">
+            <td>Learning that compounds</td>
+            <td class="td-lose">Resets</td>
+            <td class="td-neut">~</td>
+            <td class="td-win">✓ Every campaign</td>
+          </tr>
+          <tr>
+            <td>Managed execution</td>
+            <td class="td-win">✓</td>
+            <td class="td-lose">Self-serve</td>
+            <td class="td-win">✓ AI-powered</td>
+          </tr>
+          <tr class="hl">
+            <td>Competitive intelligence</td>
+            <td class="td-lose">✗</td>
+            <td class="td-neut">Generic</td>
+            <td class="td-win">✓ 2,000+ ads</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -709,42 +743,42 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
   <div class="platform-layout">
 
     <div class="platform-features">
-      <div class="pf-item active">
+      <div class="pf-item" data-feature="1">
         <div class="pf-icon">⬡</div>
         <div>
           <div class="pf-title">Creative Clusters</div>
           <div class="pf-body">Your creatives grouped by performance. See which clusters drive RoAS vs. where budget is stranded. Your brand vs. competition tab view.</div>
         </div>
       </div>
-      <div class="pf-item">
+      <div class="pf-item" data-feature="2">
         <div class="pf-icon">◈</div>
         <div>
           <div class="pf-title">Creator Brand Fit &amp; RoAS Prediction</div>
           <div class="pf-body">Every creator scored on audience match, Brand DNA alignment, and predicted RoAS — before activation.</div>
         </div>
       </div>
-      <div class="pf-item">
+      <div class="pf-item" data-feature="3">
         <div class="pf-icon">◎</div>
         <div>
           <div class="pf-title">Creative RoAS Prediction</div>
           <div class="pf-body">Hook × format × creator tier matrix ranked by predicted RoAS with confidence intervals from your campaign history.</div>
         </div>
       </div>
-      <div class="pf-item">
+      <div class="pf-item" data-feature="4">
         <div class="pf-icon">⊞</div>
         <div>
           <div class="pf-title">Creative Attribute Linkage</div>
           <div class="pf-body">Which specific attributes — hook style, setting, tone, visual format — are driving your RoAS. Evidence, not mood boards.</div>
         </div>
       </div>
-      <div class="pf-item">
+      <div class="pf-item" data-feature="5">
         <div class="pf-icon">⊕</div>
         <div>
           <div class="pf-title">Creative Recommendations</div>
           <div class="pf-body">Model-generated brief for the next campaign — grounded in what works, what's untested, and what competitors haven't activated.</div>
         </div>
       </div>
-      <div class="pf-item">
+      <div class="pf-item" data-feature="6">
         <div class="pf-icon">◉</div>
         <div>
           <div class="pf-title">Brand DNA</div>
@@ -753,249 +787,255 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
       </div>
     </div>
 
-    <!-- Main screen: Creative Clusters -->
-    <div class="screen">
-      <div class="screen-bar">
-        <div class="sd" style="background:#FF5F56"></div>
-        <div class="sd" style="background:#FFBD2E"></div>
-        <div class="sd" style="background:#27C93F"></div>
-        <span class="screen-title">Creative Clusters</span>
-        <span class="screen-badge sb-green">Live</span>
-      </div>
-      <div class="screen-body">
-        <div class="cc-split">
-          <div class="cc-left">
-            <div class="cc-sec-head">Performance clusters</div>
-            <div class="cluster-row top">
-              <div>
-                <div class="cr-name">Bold Claim × Product Demo</div>
-                <div class="cr-sbar"><div class="cr-sfill" style="width:68%;background:#2B4EFF"></div></div>
+    <div class="pf-screen-area">
+
+      <!-- 1: Creative Clusters -->
+      <div class="pf-screen-wrap" data-screen="1">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="sd" style="background:#FF5F56"></div>
+            <div class="sd" style="background:#FFBD2E"></div>
+            <div class="sd" style="background:#27C93F"></div>
+            <span class="screen-title">Creative Clusters</span>
+            <span class="screen-badge sb-green">Live</span>
+          </div>
+          <div class="screen-body">
+            <div class="cc-split">
+              <div class="cc-left">
+                <div class="cc-sec-head">Performance clusters</div>
+                <div class="cluster-row top">
+                  <div>
+                    <div class="cr-name">Bold Claim × Product Demo</div>
+                    <div class="cr-sbar"><div class="cr-sfill" style="width:68%;background:#2B4EFF"></div></div>
+                  </div>
+                  <div class="cr-roas-val" style="color:#10B981">2.49×</div>
+                </div>
+                <div class="cluster-row top">
+                  <div>
+                    <div class="cr-name">Luxury Value</div>
+                    <div class="cr-sbar"><div class="cr-sfill" style="width:52%;background:#4D6EFF;opacity:0.7"></div></div>
+                  </div>
+                  <div class="cr-roas-val" style="color:#7B9FFF">2.28×</div>
+                </div>
+                <div class="cluster-row">
+                  <div>
+                    <div class="cr-name">Mid Performance</div>
+                    <div class="cr-sbar"><div class="cr-sfill" style="width:84%;background:rgba(255,255,255,0.18)"></div></div>
+                  </div>
+                  <div class="cr-roas-val" style="color:rgba(255,255,255,0.4)">1.68×</div>
+                </div>
+                <div class="cc-warn">
+                  <div class="cc-warn-title">⚠ 50.4% of spend in mid cluster</div>
+                  <div class="cc-warn-body">Reallocate to top cluster → +48% RoAS lift</div>
+                </div>
               </div>
-              <div class="cr-roas-val" style="color:#10B981">2.49×</div>
-            </div>
-            <div class="cluster-row top">
-              <div>
-                <div class="cr-name">Luxury Value</div>
-                <div class="cr-sbar"><div class="cr-sfill" style="width:52%;background:#4D6EFF;opacity:0.7"></div></div>
+              <div class="cc-right">
+                <div class="cc-tabs">
+                  <div class="cc-tab on">Your Brand</div>
+                  <div class="cc-tab">Your Competition</div>
+                </div>
+                <div class="cc-sec-head">Spend distribution</div>
+                <div class="cc-mini-bars">
+                  <div class="cc-bar-col" style="flex:1;height:30%;background:rgba(43,78,255,0.3)"></div>
+                  <div class="cc-bar-col" style="flex:1;height:55%;background:rgba(43,78,255,0.45)"></div>
+                  <div class="cc-bar-col" style="flex:1;height:82%;background:#2B4EFF"></div>
+                  <div class="cc-bar-col" style="flex:1;height:42%;background:rgba(43,78,255,0.3)"></div>
+                  <div class="cc-bar-col" style="flex:1;height:22%;background:rgba(43,78,255,0.2)"></div>
+                </div>
+                <div style="height:1px;background:rgba(255,255,255,0.06);margin:10px 0"></div>
+                <div class="cc-sec-head">RoAS by cluster</div>
+                <div class="cc-stat-row"><span class="cc-stat-label">Bold Claim × Demo</span><span class="cc-stat-val" style="color:#10B981">2.49×</span></div>
+                <div class="cc-stat-row"><span class="cc-stat-label">Luxury Value</span><span class="cc-stat-val" style="color:#7B9FFF">2.28×</span></div>
+                <div class="cc-stat-row"><span class="cc-stat-label">Mid Performance</span><span class="cc-stat-val" style="color:rgba(255,255,255,0.4)">1.68×</span></div>
               </div>
-              <div class="cr-roas-val" style="color:#7B9FFF">2.28×</div>
             </div>
-            <div class="cluster-row">
-              <div>
-                <div class="cr-name">Mid Performance</div>
-                <div class="cr-sbar"><div class="cr-sfill" style="width:84%;background:rgba(255,255,255,0.18)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2: Creator Brand Fit -->
+      <div class="pf-screen-wrap" data-screen="2">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+            <span class="screen-title">Creator Brand Fit &amp; RoAS</span>
+          </div>
+          <div class="screen-body">
+            <div class="cbf-row">
+              <div class="cbf-avatar" style="background:#2B4EFF">NK</div>
+              <div style="flex:1">
+                <div class="cbf-handle">@skincare.nk · Nano</div>
+                <div class="cbf-tags">Tutorial · F 25–32 · Skincare</div>
+                <div class="cbf-scores">
+                  <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#10B981">94%</div></div>
+                  <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.3×</div></div>
+                </div>
               </div>
-              <div class="cr-roas-val" style="color:rgba(255,255,255,0.4)">1.68×</div>
             </div>
-            <div class="cc-warn">
-              <div class="cc-warn-title">⚠ 50.4% of spend in mid cluster</div>
-              <div class="cc-warn-body">Reallocate to top cluster → +48% RoAS lift</div>
+            <div class="cbf-row">
+              <div class="cbf-avatar" style="background:#7C3AED">PV</div>
+              <div style="flex:1">
+                <div class="cbf-handle">@priya.velvet · Micro</div>
+                <div class="cbf-tags">Styling · F 22–28 · Fashion</div>
+                <div class="cbf-scores">
+                  <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#A78BFA">88%</div></div>
+                  <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.1×</div></div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="cc-right">
-            <div class="cc-tabs">
-              <div class="cc-tab on">Your Brand</div>
-              <div class="cc-tab">Your Competition</div>
-            </div>
-            <div class="cc-sec-head">Spend distribution</div>
-            <div class="cc-mini-bars">
-              <div class="cc-bar-col" style="flex:1;height:30%;background:rgba(43,78,255,0.3)"></div>
-              <div class="cc-bar-col" style="flex:1;height:55%;background:rgba(43,78,255,0.45)"></div>
-              <div class="cc-bar-col" style="flex:1;height:82%;background:#2B4EFF"></div>
-              <div class="cc-bar-col" style="flex:1;height:42%;background:rgba(43,78,255,0.3)"></div>
-              <div class="cc-bar-col" style="flex:1;height:22%;background:rgba(43,78,255,0.2)"></div>
-            </div>
-            <div style="height:1px;background:rgba(255,255,255,0.06);margin:10px 0"></div>
-            <div class="cc-sec-head">RoAS by cluster</div>
-            <div class="cc-stat-row"><span class="cc-stat-label">Bold Claim × Demo</span><span class="cc-stat-val" style="color:#10B981">2.49×</span></div>
-            <div class="cc-stat-row"><span class="cc-stat-label">Luxury Value</span><span class="cc-stat-val" style="color:#7B9FFF">2.28×</span></div>
-            <div class="cc-stat-row"><span class="cc-stat-label">Mid Performance</span><span class="cc-stat-val" style="color:rgba(255,255,255,0.4)">1.68×</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Secondary screens: 3 columns -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px">
-
-    <!-- Creator Brand Fit -->
-    <div class="screen">
-      <div class="screen-bar">
-        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
-        <span class="screen-title">Creator Brand Fit &amp; RoAS</span>
-      </div>
-      <div class="screen-body">
-        <div class="cbf-row">
-          <div class="cbf-avatar" style="background:#2B4EFF">NK</div>
-          <div style="flex:1">
-            <div class="cbf-handle">@skincare.nk · Nano</div>
-            <div class="cbf-tags">Tutorial · F 25–32 · Skincare</div>
-            <div class="cbf-scores">
-              <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#10B981">94%</div></div>
-              <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.3×</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="cbf-row">
-          <div class="cbf-avatar" style="background:#7C3AED">PV</div>
-          <div style="flex:1">
-            <div class="cbf-handle">@priya.velvet · Micro</div>
-            <div class="cbf-tags">Styling · F 22–28 · Fashion</div>
-            <div class="cbf-scores">
-              <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#A78BFA">88%</div></div>
-              <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.1×</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="cbf-row">
-          <div class="cbf-avatar" style="background:#059669">AS</div>
-          <div style="flex:1">
-            <div class="cbf-handle">@aarav.well · Nano</div>
-            <div class="cbf-tags">Testimonial · M 28–40 · Wellness</div>
-            <div class="cbf-scores">
-              <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#6EE7B7">82%</div></div>
-              <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.0×</div></div>
+            <div class="cbf-row">
+              <div class="cbf-avatar" style="background:#059669">AS</div>
+              <div style="flex:1">
+                <div class="cbf-handle">@aarav.well · Nano</div>
+                <div class="cbf-tags">Testimonial · M 28–40 · Wellness</div>
+                <div class="cbf-scores">
+                  <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#6EE7B7">82%</div></div>
+                  <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.0×</div></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Creative RoAS Prediction -->
-    <div class="screen">
-      <div class="screen-bar">
-        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
-        <span class="screen-title">Creative RoAS Prediction</span>
-      </div>
-      <div class="screen-body">
-        <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-bottom:8px">Hook × Format — based on your campaign history</div>
-        <table class="roas-matrix" style="width:100%">
-          <tr>
-            <td class="rm-th left" style="width:76px"></td>
-            <td class="rm-th">Product demo</td>
-            <td class="rm-th">Tutorial</td>
-            <td class="rm-th">Talking head</td>
-          </tr>
-          <tr>
-            <td class="rm-td row-label">Bold claim</td>
-            <td class="rm-td hot">2.49×</td>
-            <td class="rm-td mid">1.9×</td>
-            <td class="rm-td mid">2.1×</td>
-          </tr>
-          <tr>
-            <td class="rm-td row-label">Ingredient edu.</td>
-            <td class="rm-td mid">2.0×</td>
-            <td class="rm-td hot">2.3×</td>
-            <td class="rm-td dim">1.5×</td>
-          </tr>
-          <tr>
-            <td class="rm-td row-label">Transformation</td>
-            <td class="rm-td dim">1.7×</td>
-            <td class="rm-td mid">2.2×</td>
-            <td class="rm-td dim">1.6×</td>
-          </tr>
-        </table>
-        <div style="margin-top:9px;display:flex;align-items:center;gap:6px">
-          <div style="width:8px;height:8px;background:rgba(43,78,255,0.22);border:1px solid rgba(43,78,255,0.4);border-radius:2px"></div>
-          <span style="color:rgba(255,255,255,0.25);font-size:9px">Your brand data only — no network averages</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Creative Attribute Linkage -->
-    <div class="screen">
-      <div class="screen-bar">
-        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
-        <span class="screen-title">Creative Attribute Linkage</span>
-      </div>
-      <div class="screen-body">
-        <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-bottom:10px">Attribute → RoAS impact (your brand)</div>
-        <div class="attr-row" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15)">
-          <span class="attr-label">Bold claim hook</span><span class="attr-val" style="color:#10B981">+0.81×</span>
-        </div>
-        <div class="attr-row" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.15)">
-          <span class="attr-label">Ingredient education</span><span class="attr-val" style="color:#7B9FFF">+0.62×</span>
-        </div>
-        <div class="attr-row" style="background:rgba(43,78,255,0.05);border:1px solid rgba(43,78,255,0.1)">
-          <span class="attr-label">Product demo format</span><span class="attr-val" style="color:#7B9FFF">+0.44×</span>
-        </div>
-        <div class="attr-row" style="background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12)">
-          <span class="attr-label">Discount signal hook</span><span class="attr-val" style="color:rgba(255,90,90,0.8)">−0.38×</span>
-        </div>
-        <div class="attr-row" style="background:rgba(255,80,80,0.04);border:1px solid rgba(255,80,80,0.08)">
-          <span class="attr-label">Generic lifestyle B-roll</span><span class="attr-val" style="color:rgba(255,90,90,0.8)">−0.52×</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Third row: Recommendations + Brand DNA -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
-
-    <!-- Creative Recommendations -->
-    <div class="screen">
-      <div class="screen-bar">
-        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
-        <span class="screen-title">Creative Recommendations</span>
-        <span class="screen-badge sb-blue">Next campaign</span>
-      </div>
-      <div class="screen-body">
-        <div class="reco-card" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.2)">
-          <div class="reco-tag" style="color:#7B9FFF">Recommended — 2.2–2.6× predicted RoAS</div>
-          <div class="reco-body" style="color:rgba(255,255,255,0.65)">Bold claim × Product demo · Nano creator · F 25–34 · Ingredient-led hook · 30–45 sec reel</div>
-        </div>
-        <div class="reco-card" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18)">
-          <div class="reco-tag" style="color:#10B981">Untested — competitive whitespace</div>
-          <div class="reco-body" style="color:rgba(255,255,255,0.65)">Science-backed hook × Tutorial format — zero competitor spend. Uncontested opportunity in your category.</div>
-        </div>
-        <div class="reco-card" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18)">
-          <div class="reco-tag" style="color:#F59E0B">Avoid — below brand average</div>
-          <div class="reco-body" style="color:rgba(255,255,255,0.55)">Discount-led hook × Lifestyle B-roll — 0.9× predicted RoAS. Audience conditioning risk on premium SKUs.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Brand DNA -->
-    <div class="screen">
-      <div class="screen-bar">
-        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
-        <span class="screen-title">Brand DNA</span>
-        <span class="screen-badge sb-purple">Updated after each campaign</span>
-      </div>
-      <div class="screen-body">
-        <div class="dna-grid">
-          <div class="dna-cell" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.18)">
-            <div class="dna-cell-label">Core hook archetype</div>
-            <div class="dna-cell-val" style="color:#A78BFA">Bold claim → reveal</div>
+      <!-- 3: Creative RoAS Prediction -->
+      <div class="pf-screen-wrap" data-screen="3">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+            <span class="screen-title">Creative RoAS Prediction</span>
           </div>
-          <div class="dna-cell" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.18)">
-            <div class="dna-cell-label">Creator archetype</div>
-            <div class="dna-cell-val" style="color:#7B9FFF">Tutorial nano, F 25–34</div>
-          </div>
-          <div class="dna-cell" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18)">
-            <div class="dna-cell-label">Winning visual tone</div>
-            <div class="dna-cell-val" style="color:#6EE7B7">Premium, editorial</div>
-          </div>
-          <div class="dna-cell" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18)">
-            <div class="dna-cell-label">Model confidence</div>
-            <div class="dna-cell-val" style="color:#FCD34D">78% (month 6)</div>
-          </div>
-        </div>
-        <div class="dna-tags-wrap">
-          <div class="dna-tags-label">Top-performing attributes</div>
-          <div class="dna-tags">
-            <span class="dna-tag" style="background:rgba(139,92,246,0.12);color:#A78BFA">Ingredient education</span>
-            <span class="dna-tag" style="background:rgba(43,78,255,0.1);color:#7B9FFF">Premium setting</span>
-            <span class="dna-tag" style="background:rgba(16,185,129,0.08);color:#6EE7B7">Confidence tone</span>
-            <span class="dna-tag" style="background:rgba(43,78,255,0.08);color:#7B9FFF">30–45 sec format</span>
-            <span class="dna-tag" style="background:rgba(139,92,246,0.1);color:#A78BFA">Direct CTA at sec 20</span>
-            <span class="dna-tag" style="background:rgba(245,158,11,0.08);color:#FCD34D">Science-backed hook</span>
+          <div class="screen-body">
+            <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-bottom:8px">Hook × Format — based on your campaign history</div>
+            <table class="roas-matrix" style="width:100%">
+              <tr>
+                <td class="rm-th left" style="width:76px"></td>
+                <td class="rm-th">Product demo</td>
+                <td class="rm-th">Tutorial</td>
+                <td class="rm-th">Talking head</td>
+              </tr>
+              <tr>
+                <td class="rm-td row-label">Bold claim</td>
+                <td class="rm-td hot">2.49×</td>
+                <td class="rm-td mid">1.9×</td>
+                <td class="rm-td mid">2.1×</td>
+              </tr>
+              <tr>
+                <td class="rm-td row-label">Ingredient edu.</td>
+                <td class="rm-td mid">2.0×</td>
+                <td class="rm-td hot">2.3×</td>
+                <td class="rm-td dim">1.5×</td>
+              </tr>
+              <tr>
+                <td class="rm-td row-label">Transformation</td>
+                <td class="rm-td dim">1.7×</td>
+                <td class="rm-td mid">2.2×</td>
+                <td class="rm-td dim">1.6×</td>
+              </tr>
+            </table>
+            <div style="margin-top:9px;display:flex;align-items:center;gap:6px">
+              <div style="width:8px;height:8px;background:rgba(43,78,255,0.22);border:1px solid rgba(43,78,255,0.4);border-radius:2px"></div>
+              <span style="color:rgba(255,255,255,0.25);font-size:9px">Your brand data only — no network averages</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- 4: Creative Attribute Linkage -->
+      <div class="pf-screen-wrap" data-screen="4">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+            <span class="screen-title">Creative Attribute Linkage</span>
+          </div>
+          <div class="screen-body">
+            <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-bottom:10px">Attribute → RoAS impact (your brand)</div>
+            <div class="attr-row" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15)">
+              <span class="attr-label">Bold claim hook</span><span class="attr-val" style="color:#10B981">+0.81×</span>
+            </div>
+            <div class="attr-row" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.15)">
+              <span class="attr-label">Ingredient education</span><span class="attr-val" style="color:#7B9FFF">+0.62×</span>
+            </div>
+            <div class="attr-row" style="background:rgba(43,78,255,0.05);border:1px solid rgba(43,78,255,0.1)">
+              <span class="attr-label">Product demo format</span><span class="attr-val" style="color:#7B9FFF">+0.44×</span>
+            </div>
+            <div class="attr-row" style="background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12)">
+              <span class="attr-label">Discount signal hook</span><span class="attr-val" style="color:rgba(255,90,90,0.8)">−0.38×</span>
+            </div>
+            <div class="attr-row" style="background:rgba(255,80,80,0.04);border:1px solid rgba(255,80,80,0.08)">
+              <span class="attr-label">Generic lifestyle B-roll</span><span class="attr-val" style="color:rgba(255,90,90,0.8)">−0.52×</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5: Creative Recommendations -->
+      <div class="pf-screen-wrap" data-screen="5">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+            <span class="screen-title">Creative Recommendations</span>
+            <span class="screen-badge sb-blue">Next campaign</span>
+          </div>
+          <div class="screen-body">
+            <div class="reco-card" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.2)">
+              <div class="reco-tag" style="color:#7B9FFF">Recommended — 2.2–2.6× predicted RoAS</div>
+              <div class="reco-body" style="color:rgba(255,255,255,0.65)">Bold claim × Product demo · Nano creator · F 25–34 · Ingredient-led hook · 30–45 sec reel</div>
+            </div>
+            <div class="reco-card" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18)">
+              <div class="reco-tag" style="color:#10B981">Untested — competitive whitespace</div>
+              <div class="reco-body" style="color:rgba(255,255,255,0.65)">Science-backed hook × Tutorial format — zero competitor spend. Uncontested opportunity in your category.</div>
+            </div>
+            <div class="reco-card" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18)">
+              <div class="reco-tag" style="color:#F59E0B">Avoid — below brand average</div>
+              <div class="reco-body" style="color:rgba(255,255,255,0.55)">Discount-led hook × Lifestyle B-roll — 0.9× predicted RoAS. Audience conditioning risk on premium SKUs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6: Brand DNA -->
+      <div class="pf-screen-wrap" data-screen="6">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+            <span class="screen-title">Brand DNA</span>
+            <span class="screen-badge sb-purple">Updated after each campaign</span>
+          </div>
+          <div class="screen-body">
+            <div class="dna-grid">
+              <div class="dna-cell" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.18)">
+                <div class="dna-cell-label">Core hook archetype</div>
+                <div class="dna-cell-val" style="color:#A78BFA">Bold claim → reveal</div>
+              </div>
+              <div class="dna-cell" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.18)">
+                <div class="dna-cell-label">Creator archetype</div>
+                <div class="dna-cell-val" style="color:#7B9FFF">Tutorial nano, F 25–34</div>
+              </div>
+              <div class="dna-cell" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18)">
+                <div class="dna-cell-label">Winning visual tone</div>
+                <div class="dna-cell-val" style="color:#6EE7B7">Premium, editorial</div>
+              </div>
+              <div class="dna-cell" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18)">
+                <div class="dna-cell-label">Model confidence</div>
+                <div class="dna-cell-val" style="color:#FCD34D">78% (month 6)</div>
+              </div>
+            </div>
+            <div class="dna-tags-wrap">
+              <div class="dna-tags-label">Top-performing attributes</div>
+              <div class="dna-tags">
+                <span class="dna-tag" style="background:rgba(139,92,246,0.12);color:#A78BFA">Ingredient education</span>
+                <span class="dna-tag" style="background:rgba(43,78,255,0.1);color:#7B9FFF">Premium setting</span>
+                <span class="dna-tag" style="background:rgba(16,185,129,0.08);color:#6EE7B7">Confidence tone</span>
+                <span class="dna-tag" style="background:rgba(43,78,255,0.08);color:#7B9FFF">30–45 sec format</span>
+                <span class="dna-tag" style="background:rgba(139,92,246,0.1);color:#A78BFA">Direct CTA at sec 20</span>
+                <span class="dna-tag" style="background:rgba(245,158,11,0.08);color:#FCD34D">Science-backed hook</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -1208,25 +1248,23 @@ footer{background:#050711;padding:28px 64px;display:flex;align-items:center;just
 </footer>
 
 <script>
-  // OS layer click-to-reveal image
-  document.querySelectorAll('.os-layer-item').forEach(item => {
+  // Platform section click-to-reveal
+  const pfItems = document.querySelectorAll('.pf-item[data-feature]');
+  const pfScreens = document.querySelectorAll('.pf-screen-wrap');
+
+  pfItems.forEach(item => {
     item.addEventListener('click', () => {
-      const layer = item.dataset.layer;
-      const isActive = item.classList.contains('os-active');
-      const empty = document.getElementById('os-empty');
-
-      document.querySelectorAll('.os-layer-item').forEach(el => el.classList.remove('os-active'));
-      document.querySelectorAll('.os-img-slot').forEach(el => el.classList.remove('os-visible'));
-
-      if (!isActive) {
-        item.classList.add('os-active');
-        document.querySelector(`.os-img-slot[data-slot="${layer}"]`).classList.add('os-visible');
-        empty.style.display = 'none';
-      } else {
-        empty.style.display = 'flex';
-      }
+      const feature = item.dataset.feature;
+      pfItems.forEach(el => el.classList.remove('pf-selected'));
+      pfScreens.forEach(el => el.classList.remove('pf-visible'));
+      item.classList.add('pf-selected');
+      const screen = document.querySelector(`.pf-screen-wrap[data-screen="${feature}"]`);
+      if (screen) screen.classList.add('pf-visible');
     });
   });
+
+  // Auto-select first platform item on load
+  if (pfItems.length) pfItems[0].click();
 
   // Demo form
   const form = document.getElementById('demo-form');
