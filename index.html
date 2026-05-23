@@ -1,1404 +1,1262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galvor — We don't do impressions. We do impact.</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #FAFAF8;
-      --surface:   #F2F0EB;
-      --card:      #FFFFFF;
-      --card-deep: #F7F5F0;
-      --border:    rgba(100, 76, 20, 0.14);
-      --border-hi: rgba(100, 76, 20, 0.32);
-      --gold:      #8A6420;
-      --gold-pale: #A07830;
-      --gold-dim:  rgba(138, 100, 32, 0.1);
-      --gold-glow: rgba(138, 100, 32, 0.07);
-      --text:      #1A1610;
-      --text-soft: #4A443A;
-      --muted:     #8A8278;
-      --faint:     rgba(26, 22, 16, 0.05);
-      --red:       #A83020;
-      --radius:    3px;
-    }
-
-    html { scroll-behavior: smooth; font-size: 16px; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Merriweather Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.75;
-      overflow-x: hidden;
-    }
-
-    /* ── SCROLL PROGRESS ── */
-    #progress {
-      position: fixed; top: 0; left: 0; height: 1.5px;
-      background: linear-gradient(90deg, var(--gold), rgba(138,100,32,0.3));
-      width: 0%; z-index: 9999; transition: width 0.08s linear;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 56px;
-      height: 64px;
-      background: rgba(250, 250, 248, 0.93);
-      border-bottom: 1px solid transparent;
-      backdrop-filter: blur(20px) saturate(1.2);
-      transition: border-color 0.3s, background 0.3s;
-    }
-    nav.scrolled { border-bottom-color: var(--border); }
-
-    .nav-logo {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none;
-    }
-    .nav-logo-icon {
-      height: 32px; width: auto;
-    }
-    .nav-logo-text {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-weight: 800;
-      font-size: 1.1rem;
-      letter-spacing: 0.14em;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex; align-items: center; gap: 40px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--text); }
-
-    .nav-cta {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--bg) !important;
-      background: var(--gold);
-      padding: 9px 22px;
-      text-decoration: none;
-      transition: background 0.2s, opacity 0.2s;
-    }
-    .nav-cta:hover { background: var(--gold-pale); }
-
-    /* ── SECTION SKELETON ── */
-    section { position: relative; }
-    .container { max-width: 1160px; margin: 0 auto; padding: 0 56px; }
-
-    .section-label {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-    }
-
-    /* ═══════════════════════════════════════════
-       §1 HERO
-    ═══════════════════════════════════════════ */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-      justify-content: center;
-      padding-top: 64px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* Background grid */
-    #hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(26,22,16,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(26,22,16,0.05) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
-    }
-
-    /* Ambient glow */
-    #hero::after {
-      content: '';
-      position: absolute;
-      top: -10%; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 600px;
-      background: radial-gradient(ellipse, rgba(138,100,32,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative; z-index: 2;
-      padding: 110px 56px 60px;
-      max-width: 1160px; margin: 0 auto; width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0 80px;
-      align-items: center;
-    }
-
-    .hero-text-col {
-      display: flex; flex-direction: column;
-    }
-
-    .hero-logo-col {
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0;
-      transform: scale(0.93) translateY(16px);
-      animation: fadeUp 1.1s 0.15s forwards;
-    }
-    .hero-logo-img {
-      width: 100%; max-width: 380px; height: auto;
-      filter: drop-shadow(0 8px 32px rgba(26,22,16,0.1));
-    }
-
-    .hero-eyebrow {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 24px;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeUp 0.7s 0.3s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: clamp(3rem, 5.5vw, 5.2rem);
-      font-weight: 300;
-      line-height: 1.05;
-      letter-spacing: -0.01em;
-      margin-bottom: 16px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.9s 0.45s forwards;
-    }
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    .hero-tagline {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: clamp(1rem, 1.8vw, 1.3rem);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--text-soft);
-      margin-bottom: 44px;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.9s 0.6s forwards;
-    }
-
-    .hero-cta {
-      display: inline-block;
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--bg);
-      background: var(--gold);
-      padding: 16px 40px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-      opacity: 0;
-      animation: fadeUp 0.9s 0.75s forwards;
-      align-self: flex-start;
-    }
-    .hero-cta:hover { background: var(--gold-pale); transform: translateY(-2px); }
-
-    /* ── LOGO MARQUEE ── */
-    .marquee-wrap {
-      margin-top: 80px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 28px 0;
-      overflow: hidden;
-      position: relative;
-    }
-    .marquee-wrap::before,
-    .marquee-wrap::after {
-      content: '';
-      position: absolute; top: 0; bottom: 0; width: 160px; z-index: 2;
-      pointer-events: none;
-    }
-    .marquee-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
-    .marquee-wrap::after  { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
-
-    .marquee-track {
-      display: flex; align-items: center; gap: 64px;
-      width: max-content;
-      animation: marquee 32s linear infinite;
-    }
-
-    .marquee-logo {
-      height: 40px; width: auto;
-      flex-shrink: 0;
-      opacity: 0.7;
-      transition: opacity 0.3s;
-    }
-    .marquee-logo:hover { opacity: 1; }
-
-    .marquee-sep {
-      width: 1px; height: 28px; flex-shrink: 0;
-      background: var(--border);
-    }
-
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ═══════════════════════════════════════════
-       §2 CHALLENGES
-    ═══════════════════════════════════════════ */
-    #challenges {
-      padding: 140px 0;
-      background: var(--surface);
-    }
-
-    .section-header {
-      margin-bottom: 80px;
-    }
-    .section-title {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
-      font-weight: 300;
-      line-height: 1.1;
-    }
-    .section-title em { font-style: italic; color: var(--gold); }
-    .section-subtitle {
-      font-size: 1.05rem;
-      color: var(--text-soft);
-      max-width: 620px;
-      margin-top: 20px;
-    }
-
-    .stat-callout {
-      display: inline-flex; align-items: baseline; gap: 10px;
-      margin: 32px 0 48px;
-    }
-    .stat-number {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 3.2rem;
-      font-weight: 300;
-      color: var(--gold);
-      line-height: 1;
-    }
-    .stat-label {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-style: italic;
-      max-width: 220px;
-    }
-
-    .pain-points {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .pain-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 36px 32px 32px;
-      position: relative;
-      cursor: default;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-    }
-    .pain-item:last-child {
-      grid-column: 1 / -1;
-      display: flex;
-      align-items: flex-start;
-      gap: 28px;
-    }
-    .pain-item:hover {
-      border-color: var(--border-hi);
-      box-shadow: 0 6px 28px var(--gold-glow);
-      transform: translateY(-2px);
-    }
-
-    .pain-icon {
-      width: 32px; height: 32px;
-      color: var(--gold);
-      margin-bottom: 20px;
-      flex-shrink: 0;
-      display: block;
-    }
-    .pain-item:last-child .pain-icon {
-      margin-bottom: 0;
-      margin-top: 2px;
-    }
-
-    .pain-num {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .pain-body {}
-    .pain-title {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-    .pain-text {
-      font-size: 0.92rem;
-      color: var(--text-soft);
-      line-height: 1.75;
-      max-width: 560px;
-    }
-
-    .challenges-closing {
-      margin-top: 64px;
-      padding: 36px 44px;
-      border-left: 2px solid var(--gold);
-      background: var(--gold-glow);
-    }
-    .challenges-closing p {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 1.25rem;
-      font-style: italic;
-      color: var(--text-soft);
-      line-height: 1.65;
-    }
-    .challenges-closing strong { color: var(--text); font-style: normal; font-weight: 400; }
-
-    /* ═══════════════════════════════════════════
-       §3 WHY GALVOR
-    ═══════════════════════════════════════════ */
-    #why {
-      padding: 140px 0;
-      position: relative;
-      overflow: hidden;
-    }
-    #why::before {
-      content: '';
-      position: absolute; top: 0; right: -200px; width: 700px; height: 700px;
-      background: radial-gradient(ellipse, rgba(138,100,32,0.05) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .vp-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      margin-top: 72px;
-      background: var(--border);
-    }
-
-    .vp-card {
-      background: var(--card);
-      padding: 52px 48px;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s;
-    }
-    .vp-card:hover { background: var(--card-deep); }
-
-    .vp-card::after {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: var(--gold);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .vp-card:hover::after { transform: scaleX(1); }
-
-    .vp-index {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 5rem;
-      font-weight: 300;
-      color: var(--faint);
-      position: absolute; top: 24px; right: 36px;
-      line-height: 1;
-      transition: color 0.3s;
-    }
-    .vp-card:hover .vp-index { color: rgba(196,163,90,0.08); }
-
-    .vp-tag {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-    }
-
-    .vp-title {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 400;
-      line-height: 1.2;
-      margin-bottom: 20px;
-      color: var(--text);
-    }
-
-    .vp-lead {
-      font-size: 0.88rem;
-      color: var(--text-soft);
-      margin-bottom: 28px;
-      line-height: 1.75;
-    }
-
-    .vp-features {
-      list-style: none;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .vp-features li {
-      display: grid;
-      grid-template-columns: 20px 1fr;
-      gap: 0 12px;
-      font-size: 0.84rem;
-      color: var(--text-soft);
-      line-height: 1.6;
-    }
-    .vp-features li::before {
-      content: '—';
-      color: var(--gold);
-      font-family: 'Merriweather Sans', sans-serif;
-      margin-top: 2px;
-    }
-    .vp-features strong { color: var(--text); font-weight: 400; }
-
-    .vp-example {
-      margin-top: 28px;
-      padding: 20px 24px;
-      background: rgba(138,100,32,0.05);
-      border-left: 2px solid rgba(138,100,32,0.28);
-    }
-    .vp-example p {
-      font-size: 0.82rem;
-      font-style: italic;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .why-closing {
-      margin-top: 72px;
-      text-align: center;
-    }
-    .why-closing p {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 1.4rem;
-      font-style: italic;
-      color: var(--text-soft);
-    }
-    .why-closing strong { color: var(--gold); font-style: normal; font-weight: 400; }
-
-    /* ═══════════════════════════════════════════
-       §4 WHAT WE OFFER
-    ═══════════════════════════════════════════ */
-    #offer {
-      padding: 140px 0;
-      background: var(--surface);
-    }
-
-    .phases-intro {
-      max-width: 600px;
-      margin-bottom: 80px;
-    }
-
-    .phases-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .phase-card {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .phase-header {
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .phase-phase {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-    .phase-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.4;
-    }
-    .phase-tagline {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-style: italic;
-    }
-
-    .phase-items {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .phase-item {
-      padding: 24px 20px;
-      border-left: 1px solid var(--border);
-    }
-    .phase-item-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .phase-item-text {
-      font-size: 0.82rem;
-      color: var(--text-soft);
-      line-height: 1.65;
-    }
-
-    .offer-closing {
-      margin-top: 80px;
-      padding: 52px 0;
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-    .offer-closing blockquote {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 1.5rem;
-      font-style: italic;
-      color: var(--text-soft);
-      max-width: 680px;
-      margin: 0 auto;
-      line-height: 1.5;
-    }
-    .offer-closing blockquote::before {
-      content: '"';
-      font-size: 3rem;
-      color: var(--gold);
-      line-height: 0.5;
-      display: block;
-      margin-bottom: 16px;
-    }
-
-    /* ═══════════════════════════════════════════
-       §5 CLIENTS
-    ═══════════════════════════════════════════ */
-    #clients {
-      padding: 140px 0;
-      position: relative;
-    }
-
-    .clients-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      margin-bottom: 80px;
-    }
-
-    .logo-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-    }
-
-    .logo-cell {
-      background: var(--card);
-      display: flex; align-items: center; justify-content: center;
-      padding: 44px 32px;
-      min-height: 110px;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s;
-      cursor: default;
-    }
-    .logo-cell::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: var(--gold-glow);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .logo-cell:hover { background: var(--card-deep); }
-    .logo-cell:hover::after { opacity: 1; }
-
-    .logo-name {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      position: relative; z-index: 1;
-      transition: color 0.3s;
-    }
-    .logo-cell:hover .logo-name { color: var(--gold); }
-
-    .logo-img {
-      max-width: 143px; max-height: 53px;
-      width: auto; height: auto;
-      opacity: 0.9;
-      position: relative; z-index: 1;
-      transition: opacity 0.3s, transform 0.3s;
-      object-fit: contain;
-    }
-    .logo-cell:hover .logo-img { opacity: 1; transform: scale(1.05); }
-
-    /* ═══════════════════════════════════════════
-       §6 CONTACT
-    ═══════════════════════════════════════════ */
-    #contact {
-      padding: 140px 0;
-      background: var(--surface);
-      position: relative;
-    }
-    #contact::before {
-      content: '';
-      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 300px;
-      background: radial-gradient(ellipse, rgba(138,100,32,0.05) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 100px;
-      align-items: start;
-    }
-
-    .contact-left {}
-    .contact-intro {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 1.05rem;
-      font-style: italic;
-      color: var(--text-soft);
-      margin-top: 20px;
-      margin-bottom: 48px;
-      line-height: 1.75;
-    }
-
-    .contact-email-line {
-      display: flex; align-items: center; gap: 16px;
-      margin-top: 36px;
-    }
-    .email-line-bar { width: 32px; height: 1px; background: var(--gold); }
-    .email-link {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--gold);
-      text-decoration: none;
-      text-transform: lowercase;
-      transition: opacity 0.2s;
-    }
-    .email-link:hover { opacity: 0.75; }
-
-    .contact-form {
-      display: flex; flex-direction: column; gap: 28px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .form-field {
-      display: flex; flex-direction: column; gap: 10px;
-    }
-
-    .form-label {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .form-input {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 300;
-      padding: 14px 18px;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-      -webkit-appearance: none;
-    }
-    .form-input::placeholder { color: var(--muted); }
-    .form-input:focus {
-      border-color: var(--gold);
-      background: var(--card-deep);
-    }
-
-    .form-submit {
-      background: var(--gold);
-      color: var(--bg);
-      border: none;
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 18px 44px;
-      cursor: pointer;
-      align-self: flex-start;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .form-submit:hover {
-      background: var(--gold-pale);
-      transform: translateY(-2px);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 48px 56px;
-      border-top: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .footer-logo {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-weight: 800;
-      font-size: 0.9rem;
-      letter-spacing: 0.18em;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-    .footer-copy {
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-    .footer-social {
-      display: flex; align-items: center; gap: 20px;
-    }
-    .footer-social a {
-      display: flex; align-items: center; gap: 6px;
-      font-family: 'Merriweather Sans', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-social a:hover { color: var(--gold); }
-    .footer-social svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
-
-    /* ── REVEAL ANIMATIONS ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-                  transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 0 28px; }
-      .nav-links { display: none; }
-      .container { padding: 0 28px; }
-      .hero-inner {
-        padding: 100px 28px 60px;
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .hero-logo-col { order: -1; }
-      .hero-logo-img { max-width: 240px; }
-      footer { padding: 40px 28px; }
-
-      .vp-grid { grid-template-columns: 1fr; }
-      .phase-card { grid-template-columns: 1fr; }
-      .phase-header { border-right: none; border-bottom: 1px solid var(--border); }
-      .phase-items { grid-template-columns: repeat(2, 1fr); }
-      .contact-grid { grid-template-columns: 1fr; gap: 60px; }
-      .logo-grid { grid-template-columns: repeat(3, 1fr); }
-      .form-row { grid-template-columns: 1fr; }
-      .pain-points { grid-template-columns: 1fr; }
-      .pain-item:last-child { flex-direction: column; gap: 16px; }
-      .clients-header { flex-direction: column; align-items: flex-start; gap: 20px; }
-    }
-
-    @media (max-width: 600px) {
-      .logo-grid { grid-template-columns: repeat(2, 1fr); }
-      .pain-icon { width: 28px; height: 28px; }
-      .phase-items { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galvor — The Creator Performance (Predictive RoAS) Company</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;color:#0F172A;background:#fff;line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+:root{
+  --navy:#07091A;
+  --blue:#2B4EFF;
+  --blue-dim:rgba(43,78,255,0.08);
+  --blue-mid:rgba(43,78,255,0.15);
+  --blue-border:rgba(43,78,255,0.2);
+  --green:#10B981;
+  --green-dim:rgba(16,185,129,0.08);
+  --text:#0F172A;
+  --text2:#334155;
+  --muted:#64748B;
+  --faint:#94A3B8;
+  --bg:#fff;
+  --bg2:#F8FAFC;
+  --border:#E2E8F0;
+  --radius:12px;
+  --radius-lg:16px;
+  --shadow:0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* ── NAV ─────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,9,26,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:0 64px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.nav-logo{color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
+.nav-logo img{height:30px;width:30px;object-fit:contain}
+.nav-links{display:flex;gap:32px}
+.nav-links a{color:rgba(255,255,255,0.45);font-size:13px;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:#2B4EFF;color:#fff;font-size:13px;font-weight:500;padding:9px 22px;border-radius:8px}
+
+/* ── HERO ────────────────────────────────────────── */
+.hero{
+  background:var(--navy);
+  padding:96px 64px 88px;
+  position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;top:-300px;right:-300px;width:900px;height:900px;
+  background:radial-gradient(circle,rgba(43,78,255,0.07) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-250px;left:-150px;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(16,185,129,0.04) 0%,transparent 65%);pointer-events:none}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(43,78,255,0.12);border:1px solid rgba(43,78,255,0.25);
+  border-radius:20px;padding:6px 16px;margin-bottom:28px;
+}
+.eyebrow-pip{width:6px;height:6px;border-radius:50%;background:#4D6EFF}
+.eyebrow-txt{color:#7B9FFF;font-size:12px;font-weight:500}
+.eyebrow-sep{color:rgba(75,110,255,0.4)}
+.hero h1{
+  color:#fff;font-size:52px;font-weight:600;line-height:1.1;
+  max-width:820px;margin-bottom:20px;letter-spacing:-1.2px;
+}
+.hero h1 .roas-pill{
+  display:inline-block;
+  background:rgba(43,78,255,0.18);border:1px solid rgba(43,78,255,0.35);
+  border-radius:8px;padding:2px 14px;color:#7B9FFF;
+  font-size:44px;letter-spacing:-0.5px;vertical-align:baseline;
+}
+.hero-sub1{color:rgba(255,255,255,0.8);font-size:22px;font-weight:400;line-height:1.4;max-width:560px;margin-bottom:8px;letter-spacing:-0.3px}
+.hero-sub2{color:rgba(255,255,255,0.35);font-size:15px;line-height:1.65;max-width:500px;margin-bottom:44px}
+.hero-btns{display:flex;align-items:center;gap:14px}
+.btn-primary{background:#2B4EFF;color:#fff;font-size:15px;font-weight:500;padding:14px 30px;border-radius:9px}
+.btn-ghost{color:rgba(255,255,255,0.4);font-size:14px;border:1px solid rgba(255,255,255,0.1);padding:13px 22px;border-radius:9px}
+
+/* ── PROOF STRIP ─────────────────────────────────── */
+.proof-strip{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:32px 0}
+.ps-top{text-align:center;color:var(--faint);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px}
+.ps-track-wrap{overflow:hidden;position:relative}
+.ps-track-wrap::before,.ps-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.ps-track-wrap::before{left:0;background:linear-gradient(90deg,#fff 0%,transparent 100%)}
+.ps-track-wrap::after{right:0;background:linear-gradient(270deg,#fff 0%,transparent 100%)}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ps-logos{display:flex;align-items:center;gap:56px;width:max-content;animation:marquee 28s linear infinite}
+.ps-logos:hover{animation-play-state:paused}
+.ps-logo{font-size:13px;font-weight:600;letter-spacing:0.5px;color:#94A3B8;white-space:nowrap;transition:color .2s}
+.ps-logo:hover{color:#475569}
+.ps-logo.caps{text-transform:uppercase;letter-spacing:3px;font-size:10px;font-weight:700}
+.ps-logo-img{opacity:0.75;transition:opacity .2s;display:block;flex-shrink:0}
+.ps-logo-img:hover{opacity:1}
+
+/* ── REEL STRIP ──────────────────────────────────── */
+.reel-strip{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:36px 0}
+.reel-strip-label{text-align:center;color:var(--faint);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px}
+@keyframes reel-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.reel-track-wrap{overflow:hidden;position:relative}
+.reel-track-wrap::before,.reel-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:140px;z-index:2;pointer-events:none}
+.reel-track-wrap::before{left:0;background:linear-gradient(90deg,var(--bg2) 0%,transparent 100%)}
+.reel-track-wrap::after{right:0;background:linear-gradient(270deg,var(--bg2) 0%,transparent 100%)}
+.reel-track{display:flex;align-items:flex-start;gap:14px;width:max-content;animation:reel-scroll 75s linear infinite}
+.reel-track:hover{animation-play-state:paused}
+.reel-card{width:238px;height:430px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 16px rgba(0,0,0,0.10);background:#000}
+.reel-card iframe{width:100%;height:560px;border:none;display:block}
+
+/* ── SECTION BASE ────────────────────────────────── */
+.sec{padding:88px 64px}
+.sec.alt{background:var(--bg2)}
+.sec.dark{background:var(--navy)}
+.sec-label{display:inline-block;color:var(--blue);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.sec h2{font-size:38px;font-weight:600;line-height:1.15;max-width:620px;margin-bottom:14px;letter-spacing:-0.6px;color:var(--text)}
+.sec.dark h2{color:#fff}
+.sec-sub{font-size:16px;color:var(--muted);line-height:1.75;max-width:560px;margin-bottom:52px}
+.sec.dark .sec-sub{color:rgba(255,255,255,0.4)}
+
+/* ── PROBLEM ─────────────────────────────────────── */
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.prob-card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:30px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.prob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.prob-num{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.prob-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.25}
+.prob-body{font-size:14px;color:var(--muted);line-height:1.65}
+.prob-stat{display:inline-flex;align-items:center;gap:6px;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:6px;padding:5px 11px;margin-top:14px;font-size:11px;color:var(--blue);font-weight:600}
+
+/* ── OS SECTION ──────────────────────────────────── */
+.os-layout{display:grid;grid-template-columns:1fr 420px;gap:56px;align-items:start}
+.os-layers{display:flex;flex-direction:column}
+.os-layer-item{display:flex;gap:20px;padding:26px 0;border-bottom:1px solid var(--border)}
+.os-layer-item:last-child{border-bottom:none}
+.os-layer-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+.li-blue{background:var(--blue-dim);border:1px solid var(--blue-border)}
+.li-green{background:var(--green-dim);border:1px solid rgba(16,185,129,0.2)}
+.li-purple{background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2)}
+.li-amber{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2)}
+.os-layer-head{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.os-layer-title{font-size:16px;font-weight:600;color:var(--text)}
+.os-layer-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:10px}
+.badge-blue{background:var(--blue-dim);color:var(--blue)}
+.badge-green{background:var(--green-dim);color:#059669}
+.badge-purple{background:rgba(139,92,246,0.08);color:#7C3AED}
+.badge-amber{background:rgba(245,158,11,0.07);color:#B45309}
+.os-layer-desc{font-size:13px;color:var(--muted);line-height:1.65}
+.os-right-panel{border-radius:var(--radius-lg);position:sticky;top:80px;min-height:260px;display:flex;flex-direction:column;justify-content:center}
+.os-img-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:2px dashed var(--border);border-radius:var(--radius-lg);padding:56px 32px;text-align:center;color:var(--faint);font-size:13px;transition:opacity .2s}
+.os-img-empty-icon{font-size:28px;opacity:0.4}
+.os-img-slot{display:none;animation:os-fade .35s ease}
+.os-img-slot.os-visible{display:block}
+@keyframes os-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.os-img-slot img{width:100%;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);display:block}
+.os-layer-item{cursor:pointer;border-radius:10px;transition:background .15s}
+.os-layer-item:hover{background:var(--blue-dim);padding-left:8px;margin-left:-8px;padding-right:8px}
+.os-layer-item.os-active{background:var(--blue-dim);padding-left:8px;margin-left:-8px;padding-right:8px;border-bottom:1px solid var(--blue-border)}
+.orp-head{color:rgba(255,255,255,0.3);font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
+.comp-table{width:100%;border-collapse:collapse}
+.comp-table th{font-size:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;padding:10px 12px;text-align:left;color:rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.06)}
+.comp-table td{font-size:12px;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.4);vertical-align:middle}
+.comp-table td:first-child{color:rgba(255,255,255,0.65);font-weight:500;font-size:13px}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr.hl td{background:rgba(43,78,255,0.06)}
+.td-win{color:#10B981!important;font-weight:600!important}
+.td-lose{color:rgba(255,80,80,0.65)!important}
+.td-neut{color:rgba(255,255,255,0.28)!important}
+
+/* ── HOW IT WORKS – PHASES ───────────────────────── */
+.phases-wrap{position:relative;margin-bottom:40px}
+.phases-connector{
+  position:absolute;top:28px;left:calc(10% + 14px);right:calc(10% + 14px);
+  height:2px;background:linear-gradient(90deg,var(--blue),rgba(43,78,255,0.15));
+  z-index:0;
+}
+.phases-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;z-index:1}
+.phase{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 10px}
+.phase-dot{
+  width:28px;height:28px;border-radius:50%;background:var(--navy);border:2px solid var(--blue);
+  color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;flex-shrink:0;
+}
+.phase-dot.done{background:var(--blue)}
+.phase-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;width:100%;box-shadow:var(--shadow);text-align:left}
+.phase-eyebrow{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.phase-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
+.phase-body{font-size:12px;color:var(--muted);line-height:1.55}
+.phase-tag{display:inline-block;background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue);font-size:10px;font-weight:500;padding:3px 9px;border-radius:10px;margin-top:10px}
+
+.split-bar{background:var(--navy);border-radius:var(--radius-lg);padding:28px 36px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+.sb-label{color:rgba(255,255,255,0.3);font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.sb-track{height:12px;background:rgba(255,255,255,0.07);border-radius:6px;overflow:hidden;margin-bottom:10px}
+.sb-fill{height:100%;width:80%;background:linear-gradient(90deg,#2B4EFF 0%,#2B4EFF 80%,#10B981 100%);border-radius:6px}
+.sb-legend{display:flex;flex-direction:column;gap:6px}
+.sb-leg{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.45)}
+.sb-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.sb-right{text-align:right;white-space:nowrap}
+.sb-big{color:#fff;font-size:40px;font-weight:300;letter-spacing:-1.5px;line-height:1}
+.sb-sub{color:rgba(255,255,255,0.28);font-size:12px;margin-top:4px}
+
+/* ── PLATFORM (combined with deliverables) ─────── */
+.platform-layout{display:grid;grid-template-columns:320px 1fr;gap:48px;align-items:start}
+.platform-features{display:flex;flex-direction:column;gap:2px}
+.pf-item{display:flex;gap:14px;padding:15px 14px;border-radius:10px;transition:background .15s;cursor:default}
+.pf-item:hover,.pf-item.active{background:var(--bg2)}
+.pf-icon{width:36px;height:36px;border-radius:8px;background:var(--blue-dim);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:1px}
+.pf-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.pf-body{font-size:12px;color:var(--muted);line-height:1.55}
+
+/* Screen chrome */
+.screen{background:var(--navy);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)}
+.screen-bar{background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);padding:10px 16px;display:flex;align-items:center;gap:7px}
+.sd{width:8px;height:8px;border-radius:50%}
+.screen-title{color:rgba(255,255,255,0.3);font-size:11px;margin-left:6px;flex:1}
+.screen-badge{font-size:9px;padding:2px 8px;border-radius:7px}
+.sb-green{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:#10B981}
+.sb-blue{background:rgba(43,78,255,0.12);border:1px solid rgba(43,78,255,0.2);color:#7B9FFF}
+.sb-purple{background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);color:#A78BFA}
+.screen-body{padding:18px}
+
+/* Creative Clusters screen */
+.cc-split{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.cc-left{padding:16px;border-right:1px solid rgba(255,255,255,0.06)}
+.cc-right{padding:16px}
+.cc-sec-head{color:rgba(255,255,255,0.25);font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.cc-tabs{display:flex;margin-bottom:14px;border:1px solid rgba(255,255,255,0.08);border-radius:7px;overflow:hidden}
+.cc-tab{flex:1;padding:7px;font-size:11px;font-weight:500;text-align:center;color:rgba(255,255,255,0.3)}
+.cc-tab.on{background:var(--blue);color:#fff}
+.cluster-row{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:7px;padding:9px 11px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.cluster-row.top{border-color:rgba(43,78,255,0.3);background:rgba(43,78,255,0.1)}
+.cr-name{color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;margin-bottom:4px}
+.cr-sbar{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;width:100px}
+.cr-sfill{height:100%;border-radius:2px}
+.cr-roas-val{font-size:14px;font-weight:600;white-space:nowrap}
+.cc-warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:8px 10px;margin-top:8px}
+.cc-warn-title{color:#F59E0B;font-size:10px;font-weight:600;margin-bottom:2px}
+.cc-warn-body{color:rgba(245,158,11,0.6);font-size:9px}
+.cc-mini-bar-wrap{margin-bottom:12px}
+.cc-mini-bars{height:64px;background:rgba(255,255,255,0.02);border-radius:6px;padding:8px;display:flex;align-items:flex-end;gap:3px}
+.cc-bar-col{border-radius:2px 2px 0 0}
+.cc-stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.cc-stat-row:last-child{border-bottom:none}
+.cc-stat-label{color:rgba(255,255,255,0.4);font-size:10px}
+.cc-stat-val{font-size:11px;font-weight:600}
+
+/* Creator Brand Fit screen */
+.cbf-row{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:7px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px}
+.cbf-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.cbf-handle{color:rgba(255,255,255,0.65);font-size:11px;font-weight:500;margin-bottom:2px}
+.cbf-tags{color:rgba(255,255,255,0.28);font-size:10px;margin-bottom:7px}
+.cbf-scores{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cbf-score{background:rgba(255,255,255,0.03);border-radius:5px;padding:5px 7px}
+.cbf-score-label{color:rgba(255,255,255,0.25);font-size:9px}
+.cbf-score-val{font-size:12px;font-weight:600;margin-top:1px}
+
+/* RoAS matrix screen */
+.roas-matrix{width:100%;border-collapse:collapse}
+.rm-th{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.28);font-size:10px;padding:7px 10px;text-align:center;font-weight:500}
+.rm-th.left{text-align:left}
+.rm-td{padding:8px 10px;text-align:center}
+.rm-td.hot{background:rgba(43,78,255,0.2);color:#7B9FFF;font-size:13px;font-weight:700}
+.rm-td.mid{background:rgba(43,78,255,0.1);color:rgba(255,255,255,0.6);font-size:12px;font-weight:500}
+.rm-td.dim{color:rgba(255,255,255,0.3);font-size:12px}
+.rm-td.row-label{color:rgba(255,255,255,0.4);font-size:10px;font-weight:500;text-align:left;background:rgba(255,255,255,0.02);padding:8px 10px}
+
+/* Attribute linkage screen */
+.attr-row{border-radius:6px;padding:8px 10px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.attr-label{color:rgba(255,255,255,0.6);font-size:11px}
+.attr-val{font-size:13px;font-weight:600}
+
+/* Reco screen */
+.reco-card{border-radius:7px;padding:11px 12px;margin-bottom:7px}
+.reco-tag{font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:5px}
+.reco-body{font-size:11px;line-height:1.5}
+
+/* Brand DNA screen */
+.dna-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.dna-cell{border-radius:7px;padding:10px 11px}
+.dna-cell-label{font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:3px}
+.dna-cell-val{font-size:12px;font-weight:600}
+.dna-tags-wrap{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:7px;padding:10px 12px}
+.dna-tags-label{font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:7px}
+.dna-tags{display:flex;flex-wrap:wrap;gap:5px}
+.dna-tag{font-size:9px;padding:3px 9px;border-radius:10px}
+
+/* ── RESULTS ─────────────────────────────────────── */
+.results-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}
+.result-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);padding:28px}
+.r-vert-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.r-vert-label.fashion{color:#7B9FFF}
+.r-vert-label.beauty{color:#F9A8D4}
+.r-vert-label.wellness{color:#6EE7B7}
+.r-brand{color:#fff;font-size:17px;font-weight:600;margin-bottom:4px;line-height:1.3}
+.r-brand-note{color:rgba(255,255,255,0.3);font-size:12px;margin-bottom:16px}
+.r-find{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.r-pip{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.r-text{color:rgba(255,255,255,0.5);font-size:12px;line-height:1.5}
+.r-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.r-met{background:rgba(255,255,255,0.05);border-radius:8px;padding:12px}
+.r-num{font-size:22px;font-weight:600;margin-bottom:3px}
+.r-num.blue{color:#7B9FFF}
+.r-num.pink{color:#F9A8D4}
+.r-num.green{color:#6EE7B7}
+.r-lbl{color:rgba(255,255,255,0.28);font-size:10px;line-height:1.4}
+.r-quote{border-left:2px solid rgba(43,78,255,0.4);padding:10px 14px;margin-top:14px;border-radius:0 8px 8px 0;background:rgba(43,78,255,0.07)}
+.r-qt{color:rgba(255,255,255,0.5);font-size:11px;line-height:1.6;font-style:italic;margin-bottom:4px}
+.r-attr{color:rgba(255,255,255,0.2);font-size:10px}
+.fictional-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#F59E0B;font-size:9px;padding:2px 8px;border-radius:8px;margin-bottom:8px}
+
+/* ── FLYWHEEL ────────────────────────────────────── */
+.fw-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fw-phase{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.fw-phase::after{content:attr(data-n);position:absolute;right:16px;top:10px;font-size:64px;font-weight:700;color:rgba(43,78,255,0.04);line-height:1;pointer-events:none}
+.fw-time{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.fw-title{font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.3}
+.fw-body{font-size:13px;color:var(--muted);line-height:1.6}
+.fw-metric{display:inline-flex;align-items:center;gap:5px;background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:6px;padding:4px 10px;margin-top:12px;font-size:11px;color:var(--blue);font-weight:600}
+.fw-metric.green{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.2);color:#059669}
+.fw-pause{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-top:16px;display:flex;gap:18px;align-items:center;box-shadow:var(--shadow)}
+.fw-pause-icon{font-size:22px;flex-shrink:0}
+.fw-pause-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.fw-pause-body{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── ICP ─────────────────────────────────────────── */
+.icp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.icp-yes{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:var(--radius-lg);padding:28px}
+.icp-no{background:#FFF1F2;border:1px solid #FECDD3;border-radius:var(--radius-lg);padding:28px}
+.icp-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 14px;border-radius:10px;margin-bottom:16px}
+.icp-badge.yes{background:#DCFCE7;color:#15803D}
+.icp-badge.no{background:#FFE4E6;color:#BE123C}
+.icp-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:14px;color:#475569;line-height:1.55}
+.icp-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.icp-dot.yes{background:#10B981}
+.icp-dot.no{background:#E11D48}
+.chips-wrap{overflow:hidden;position:relative;margin-top:0}
+.chips-wrap::before,.chips-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.chips-wrap::before{left:0;background:linear-gradient(90deg,#fff 0%,transparent 100%)}
+.chips-wrap::after{right:0;background:linear-gradient(270deg,#fff 0%,transparent 100%)}
+@keyframes chips-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.chips{display:flex;align-items:center;gap:10px;width:max-content;animation:chips-scroll 22s linear infinite}
+.chips:hover{animation-play-state:paused}
+.chip{border-radius:20px;padding:7px 18px;font-size:14px;font-weight:500;box-shadow:var(--shadow);white-space:nowrap;flex-shrink:0;border:1px solid transparent}
+.chips .chip:nth-child(10n+1){background:rgba(244,63,94,0.07);border-color:rgba(244,63,94,0.18);color:#BE185D}
+.chips .chip:nth-child(10n+2){background:rgba(71,85,105,0.08);border-color:rgba(71,85,105,0.18);color:#334155}
+.chips .chip:nth-child(10n+3){background:rgba(16,185,129,0.09);border-color:rgba(16,185,129,0.2);color:#047857}
+.chips .chip:nth-child(10n+4){background:rgba(168,85,247,0.08);border-color:rgba(168,85,247,0.2);color:#7C3AED}
+.chips .chip:nth-child(10n+5){background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);color:#92400E}
+.chips .chip:nth-child(10n+6){background:rgba(20,184,166,0.09);border-color:rgba(20,184,166,0.2);color:#0F766E}
+.chips .chip:nth-child(10n+7){background:rgba(101,163,13,0.08);border-color:rgba(101,163,13,0.2);color:#3F6212}
+.chips .chip:nth-child(10n+8){background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.2);color:#C2410C}
+.chips .chip:nth-child(10n+9){background:rgba(43,78,255,0.08);border-color:rgba(43,78,255,0.2);color:#1D4ED8}
+.chips .chip:nth-child(10n+10){background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.2);color:#5B21B6}
+
+/* ── CTA ─────────────────────────────────────────── */
+.cta-sec{background:var(--navy);padding:100px 64px;text-align:center;position:relative;overflow:hidden}
+.cta-sec::before{content:'';position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(circle,rgba(43,78,255,0.07) 0%,transparent 60%);pointer-events:none}
+.cta-inner{position:relative;z-index:1}
+.cta-sec h2{color:#fff;font-size:46px;font-weight:600;line-height:1.12;max-width:520px;margin:0 auto 16px;letter-spacing:-0.8px}
+.cta-sec p{color:rgba(255,255,255,0.38);font-size:16px;line-height:1.7;max-width:420px;margin:0 auto 40px}
+.cta-pts{max-width:420px;margin:0 auto 40px;text-align:left;display:flex;flex-direction:column;gap:14px}
+.cta-pt{display:flex;gap:14px;align-items:flex-start}
+.cta-num{width:24px;height:24px;background:rgba(43,78,255,0.22);color:#7B9FFF;font-size:11px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.cta-txt{color:rgba(255,255,255,0.5);font-size:15px;line-height:1.6}
+.cta-btn{display:inline-block;background:#2B4EFF;color:#fff;font-size:16px;font-weight:600;padding:16px 40px;border-radius:10px;margin-bottom:12px}
+.cta-micro{color:rgba(255,255,255,0.18);font-size:13px;letter-spacing:0.3px}
+
+/* ── DEMO FORM ───────────────────────────────────── */
+.demo-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;max-width:980px;margin:0 auto;text-align:left}
+.demo-left{}
+.form-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:36px}
+.form-field{margin-bottom:16px}
+.form-field label{display:block;color:rgba(255,255,255,0.45);font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:7px}
+.form-field input,.form-field textarea{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.form-field input::placeholder,.form-field textarea::placeholder{color:rgba(255,255,255,0.2)}
+.form-field input:focus,.form-field textarea:focus{border-color:rgba(43,78,255,0.55);background:rgba(255,255,255,0.08)}
+.form-field textarea{min-height:88px;resize:vertical;line-height:1.5}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-submit{width:100%;background:#2B4EFF;color:#fff;border:none;font-size:15px;font-weight:600;padding:14px;border-radius:9px;cursor:pointer;font-family:inherit;transition:background .2s;margin-top:4px}
+.form-submit:hover{background:#3D5EFF}
+.form-note{color:rgba(255,255,255,0.18);font-size:12px;text-align:center;margin-top:10px}
+
+/* ── FOOTER ──────────────────────────────────────── */
+footer{background:#050711;padding:28px 64px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;gap:12px}
+.footer-logo{color:#4D6EFF;font-size:14px;font-weight:700;letter-spacing:1.5px}
+.footer-tagline{color:rgba(255,255,255,0.18);font-size:12px}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:768px){
+  /* Nav */
+  nav{padding:0 20px;height:56px}
+  .nav-links{display:none}
+  .nav-cta{padding:8px 16px;font-size:12px}
+
+  /* Hero */
+  .hero{padding:56px 24px 48px}
+  .hero h1{font-size:34px;letter-spacing:-0.5px}
+  .hero h1 .roas-pill{font-size:28px}
+  .hero-sub1{font-size:18px}
+  .hero-sub2{font-size:14px;margin-bottom:32px}
+  .btn-primary{font-size:14px;padding:12px 22px}
+
+  /* Strips — narrow edge masks on small screens */
+  .ps-track-wrap::before,.ps-track-wrap::after{width:48px}
+  .reel-track-wrap::before,.reel-track-wrap::after{width:48px}
+
+  /* Sections */
+  .sec{padding:56px 24px}
+  .sec h2{font-size:26px;letter-spacing:-0.3px}
+  .sec-sub{font-size:14px;margin-bottom:32px}
+
+  /* Problem */
+  .prob-grid{grid-template-columns:1fr}
+
+  /* OS — hide comparison panel, stack */
+  .os-layout{grid-template-columns:1fr}
+  .os-right-panel{display:none}
+
+  /* Platform */
+  .platform-layout{grid-template-columns:1fr}
+  /* override inline 3-col and 2-col screen grids */
+  [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:1fr 1fr"][style*="margin-top:14px"]{grid-template-columns:1fr!important}
+
+  /* Results */
+  .results-grid{grid-template-columns:1fr}
+
+  /* Flywheel */
+  .fw-grid{grid-template-columns:1fr}
+  .fw-pause{flex-direction:column;gap:12px}
+
+  /* Who it's for */
+  .chips-wrap::before,.chips-wrap::after{width:40px}
+  .chip{font-size:12px;padding:5px 13px}
+
+  /* Demo / CTA */
+  .cta-sec{padding:56px 24px}
+  .cta-sec h2{font-size:30px;letter-spacing:-0.4px}
+  .demo-layout{grid-template-columns:1fr;gap:36px}
+  .form-row{grid-template-columns:1fr}
+  .form-card{padding:24px}
+
+  /* Footer */
+  footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:6px}
+}
+
+@media(max-width:480px){
+  .hero h1{font-size:28px}
+  .hero h1 .roas-pill{font-size:22px;padding:2px 10px}
+  .hero-sub1{font-size:16px}
+  .hero-eyebrow{flex-wrap:wrap;justify-content:center}
+  .nav-logo img{height:24px;width:24px}
+  .nav-cta{display:none}
+  .cta-sec h2{font-size:26px}
+}
+</style>
 </head>
 <body>
 
-<div id="progress"></div>
-
-<!-- ── NAV ── -->
-<nav id="nav">
-  <a href="#hero" class="nav-logo">
-    <img src="galvor_images/image16.png" alt="Galvor" class="nav-logo-icon" style="filter: brightness(0) saturate(100%) invert(70%) sepia(40%) saturate(400%) hue-rotate(10deg) brightness(95%);">
-    <span class="nav-logo-text">Galvor</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#challenges">Challenges</a></li>
-    <li><a href="#why">Why Galvor</a></li>
-    <li><a href="#offer">Services</a></li>
-    <li><a href="#clients">Clients</a></li>
-    <li><a href="#contact" class="nav-cta">Speak to us</a></li>
-  </ul>
+<!-- ═══ NAV ══════════════════════════════════════════ -->
+<nav>
+  <div class="nav-logo"><img src="galvor_images/image16.png" alt="Galvor"><span style="letter-spacing:1.5px">GAL<span style="color:#4D6EFF">VOR</span></span></div>
+  <div class="nav-links">
+    <a href="#platform">Platform</a>
+    <a href="#results">Results</a>
+    <a href="#who">Who it's for</a>
+  </div>
+  <a href="#demo" class="nav-cta">Book a demo</a>
 </nav>
 
-<!-- ═══════════════════════════════════════
-     §1 HERO
-═══════════════════════════════════════ -->
-<section id="hero">
-  <div class="hero-inner">
-    <div class="hero-text-col">
-      <p class="hero-eyebrow">End-to-end influencer campaigns</p>
-      <h1 class="hero-title">
-        We don't do<br>
-        <em>impressions.</em><br>
-        We do impact.
-      </h1>
-      <p class="hero-tagline">Built on AI, run by people who know creators.</p>
-      <a href="#contact" class="hero-cta">Speak to us</a>
-    </div>
-    <div class="hero-logo-col">
-      <img src="galvor_images/image11.png" alt="Galvor" class="hero-logo-img">
-    </div>
+<!-- ═══ HERO ══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="eyebrow-pip"></span>
+    <span class="eyebrow-txt">Fashion</span><span class="eyebrow-sep"> · </span>
+    <span class="eyebrow-txt">Beauty</span><span class="eyebrow-sep"> · </span>
+    <span class="eyebrow-txt">Wellness</span><span class="eyebrow-sep"> · </span>
+    <span class="eyebrow-txt">Global D2C</span>
   </div>
-
-  <div class="marquee-wrap">
-    <div class="marquee-track" id="marquee">
-      <img class="marquee-logo" src="galvor_images/image14.png" alt="Amazon">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image21.png" alt="AngelOne">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image15.png" alt="GMR">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image23.png" alt="MaisonX">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image17.png" alt="Xtend">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image25.png" alt="C4">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image22.png" alt="Pure Nutrition">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image20.png" alt="Physics Wallah">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image4.png" alt="Halo Care">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image13.png" alt="Blue Nectar">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image26.png" alt="LimeRoad">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image27.png" alt="Turtle">
-      <span class="marquee-sep"></span>
-      <!-- duplicate for seamless loop -->
-      <img class="marquee-logo" src="galvor_images/image14.png" alt="Amazon">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image21.png" alt="AngelOne">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image15.png" alt="GMR">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image23.png" alt="MaisonX">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image17.png" alt="Xtend">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image25.png" alt="C4">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image22.png" alt="Pure Nutrition">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image20.png" alt="Physics Wallah">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image4.png" alt="Halo Care">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image13.png" alt="Blue Nectar">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image26.png" alt="LimeRoad">
-      <span class="marquee-sep"></span>
-      <img class="marquee-logo" src="galvor_images/image27.png" alt="Turtle">
-      <span class="marquee-sep"></span>
-    </div>
+  <h1>The Creator Performance<br><span class="roas-pill">Predictive RoAS</span> Company</h1>
+  <p class="hero-sub1">Know your RoAS before you spend.</p>
+  <p class="hero-sub2">Galvor learns from every campaign you run — predictions sharpen every month, execution runs end-to-end.</p>
+  <div class="hero-btns">
+    <a href="#demo" class="btn-primary">Book a demo →</a>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     §2 CHALLENGES
-═══════════════════════════════════════ -->
-<section id="challenges">
-  <div class="container">
-    <div class="section-header reveal">
-      <h2 class="section-title">Influencer marketing<br>has a <em>trust problem.</em></h2>
-      <p class="section-subtitle">Brands spent over $21 billion on influencer marketing globally in 2024. Yet most marketing teams still can't answer a simple question at the end of a campaign: did it actually work?</p>
+<!-- ═══ PROOF STRIP ════════════════════════════════════ -->
+<div class="proof-strip">
+  <div class="ps-top">Trusted by leading D2C brands</div>
+  <div class="ps-track-wrap">
+    <div class="ps-logos">
+      <!-- set 1 -->
+      <img class="ps-logo-img" style="height:28px" src="logos/xtend.png" alt="XTEND">
+      <img class="ps-logo-img" style="height:32px" src="galvor_images/image25.png" alt="C4 Original">
+      <img class="ps-logo-img" style="height:26px" src="galvor_images/image22.png" alt="Pure Nutrition">
+      <img class="ps-logo-img" style="height:34px" src="galvor_images/image20.png" alt="PW">
+      <img class="ps-logo-img" style="height:22px" src="galvor_images/image4.png" alt="halo care">
+      <img class="ps-logo-img" style="height:30px" src="galvor_images/image13.png" alt="Blue Nectar">
+      <img class="ps-logo-img" style="height:18px" src="galvor_images/image23.png" alt="MaisonX">
+      <img class="ps-logo-img" style="height:28px" src="galvor_images/image15.png" alt="GMR">
+      <img class="ps-logo-img" style="height:26px" src="galvor_images/image21.png" alt="AngelOne">
+      <img class="ps-logo-img" style="height:24px" src="logos/palladium.png" alt="Palladium">
+      <!-- set 2 — identical duplicate for seamless loop -->
+      <img class="ps-logo-img" style="height:28px" src="logos/xtend.png" alt="XTEND">
+      <img class="ps-logo-img" style="height:32px" src="galvor_images/image25.png" alt="C4 Original">
+      <img class="ps-logo-img" style="height:26px" src="galvor_images/image22.png" alt="Pure Nutrition">
+      <img class="ps-logo-img" style="height:34px" src="galvor_images/image20.png" alt="PW">
+      <img class="ps-logo-img" style="height:22px" src="galvor_images/image4.png" alt="halo care">
+      <img class="ps-logo-img" style="height:30px" src="galvor_images/image13.png" alt="Blue Nectar">
+      <img class="ps-logo-img" style="height:18px" src="galvor_images/image23.png" alt="MaisonX">
+      <img class="ps-logo-img" style="height:28px" src="galvor_images/image15.png" alt="GMR">
+      <img class="ps-logo-img" style="height:26px" src="galvor_images/image21.png" alt="AngelOne">
+      <img class="ps-logo-img" style="height:24px" src="logos/palladium.png" alt="Palladium">
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REEL STRIP ════════════════════════════════════ -->
+<div class="reel-strip">
+  <div class="reel-strip-label">Live creator campaigns</div>
+  <div class="reel-track-wrap">
+    <div class="reel-track">
+      <!-- set 1 — shuffled -->
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DPeTjxCjGKC/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYO3z93TYwy/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DVqImdnj-s7/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DTIH7J6EjLN/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DX_AuU_BS56/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DT0VNQhEsAv/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DPELVGuElWb/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DVlHkKTE_Vf/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DNvVhCG2LUz/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYCqQ7uKZfM/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DUIol8SEr00/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DO3hxkHjFNT/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DXwXey9svho/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DSkVTnUkqJz/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYWWwTfRsEw/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DOQtsXCjDRX/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DWi5cxHD9vY/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DVlYkftIHD0/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DTiHXdgESFV/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DU-WDj7jGQA/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DOOKBoGDPay/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYpGXJBSTJK/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DUnVsNiEqfi/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DO8dPP8idTy/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <!-- set 2 — duplicate for seamless loop -->
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DPeTjxCjGKC/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYO3z93TYwy/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DVqImdnj-s7/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DTIH7J6EjLN/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DX_AuU_BS56/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DT0VNQhEsAv/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DPELVGuElWb/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DVlHkKTE_Vf/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DNvVhCG2LUz/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYCqQ7uKZfM/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DUIol8SEr00/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DO3hxkHjFNT/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DXwXey9svho/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DSkVTnUkqJz/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYWWwTfRsEw/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DOQtsXCjDRX/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DWi5cxHD9vY/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DVlYkftIHD0/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DTiHXdgESFV/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DU-WDj7jGQA/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DOOKBoGDPay/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DYpGXJBSTJK/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DUnVsNiEqfi/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+      <div class="reel-card"><iframe src="https://www.instagram.com/reel/DO8dPP8idTy/embed/" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROBLEM ════════════════════════════════════════ -->
+<section class="sec alt">
+  <div class="sec-label">The problem</div>
+  <h2>Creator marketing is producing views, not revenue.</h2>
+  <p class="sec-sub">The same formats are running across every brand. Audiences are conditioned. Algorithms are exhausted. RoAS is inconsistent — and no one can explain why.</p>
+
+  <div class="prob-grid">
+
+    <div class="prob-card">
+      <div class="prob-num">01 — Creative Fatigue</div>
+      <div class="prob-title">The same 3 formats run across every brand</div>
+      <div class="prob-body">Outfit transition with a beat drop. Try-on haul with trending audio. GRWM with a discount code at the end. Meta audiences have seen all three thousands of times. The thumb doesn't stop anymore. And creative fatigue hits in as little as 10–14 days — most brands don't have enough volume to survive the cycle.</div>
+      <span class="prob-stat">10–14 day creative shelf life in active accounts</span>
     </div>
 
-    <div class="pain-points">
-
-      <div class="pain-item reveal reveal-delay-1">
-        <!-- Icon: broken analytics -->
-        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-          <line x1="2" y1="2" x2="22" y2="22"/>
-        </svg>
-        <span class="pain-num">01</span>
-        <p class="pain-title">You're flying blind on ROI</p>
-        <p class="pain-text">Vanity metrics don't tell you if a customer bought, downloaded, or walked in. Every campaign becomes an act of faith.</p>
-      </div>
-
-      <div class="pain-item reveal reveal-delay-1">
-        <!-- Icon: user with X (fake audience) -->
-        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-          <line x1="16" y1="2" x2="22" y2="8"/>
-          <line x1="22" y1="2" x2="16" y2="8"/>
-        </svg>
-        <span class="pain-num">02</span>
-        <p class="pain-title">The creator looked right. The audience wasn't.</p>
-        <p class="pain-text">800K followers means nothing if 60% are outside your market. Inflated counts and fake engagement go undetected manually.</p>
-      </div>
-
-      <div class="pain-item reveal reveal-delay-2">
-        <!-- Icon: briefcase (agency roster) -->
-        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="7" width="20" height="14" rx="2"/>
-          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-          <line x1="2" y1="14" x2="22" y2="14"/>
-        </svg>
-        <span class="pain-num">03</span>
-        <p class="pain-title">Your agency recommends who they know, not who fits</p>
-        <p class="pain-text">Most agencies pitch their existing roster — not the best fit for your brand. You get their Rolodex, not the market.</p>
-      </div>
-
-      <div class="pain-item reveal reveal-delay-2">
-        <!-- Icon: tangled network / chaos -->
-        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="5" cy="5" r="1.5"/><circle cx="19" cy="5" r="1.5"/>
-          <circle cx="5" cy="19" r="1.5"/><circle cx="19" cy="19" r="1.5"/>
-          <circle cx="12" cy="12" r="1.5"/>
-          <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
-          <line x1="5" y1="5" x2="12" y2="12"/><line x1="19" y1="5" x2="12" y2="12"/>
-          <line x1="12" y1="12" x2="5" y2="19"/><line x1="12" y1="12" x2="19" y2="19"/>
-        </svg>
-        <span class="pain-num">04</span>
-        <p class="pain-title">Execution is a coordination nightmare</p>
-        <p class="pain-text">Briefs, reviews, schedules, compliance, payments — running 15 creators eats your team alive. Deadlines slip. Quality suffers.</p>
-      </div>
-
-      <div class="pain-item reveal reveal-delay-3">
-        <!-- Icon: clock -->
-        <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-          <path d="M17.5 3.5 L20.5 6.5" stroke-dasharray="2 2"/>
-        </svg>
-        <div class="pain-body">
-          <span class="pain-num">05</span>
-          <p class="pain-title">By the time the campaign launches, the moment has passed</p>
-          <p class="pain-text">Trends move in days. A campaign that takes 6 weeks to launch is already irrelevant before it starts.</p>
-        </div>
-      </div>
-
+    <div class="prob-card">
+      <div class="prob-num">02 — The Measurement Trap</div>
+      <div class="prob-title">Hook rate is up. Revenue is flat.</div>
+      <div class="prob-body">The creative stops the thumb. Views look strong. But watch time falls off a cliff at 5–8 seconds — and that's where purchase intent lives. Brands celebrate view counts while hold rate bleeds out mid-reel. The CTA arrives at 25–30 seconds. By then 60–70% of cold audience viewers have already scrolled.</div>
+      <span class="prob-stat">60–70% of cold audiences gone by second 15</span>
     </div>
 
-    <div class="challenges-closing reveal">
-      <p>These aren't edge cases. They're <strong>the default experience of influencer marketing in 2026</strong> — and they're exactly what Galvor is built to fix.</p>
+    <div class="prob-card">
+      <div class="prob-num">03 — Creator Selection</div>
+      <div class="prob-title">Aesthetic fit is not audience fit</div>
+      <div class="prob-body">A creator's feed looks on-brand. The color palette matches. The styling feels right. But their audience may be 60% male, tier-3 cities, aged 18–22 — completely misaligned with your core buyer. No one filters by audience demographics, talking head performance, or product category depth. Aesthetic selection is costing RoAS.</div>
+      <span class="prob-stat">Briefs are mood boards, not performance directions</span>
+    </div>
+
+    <div class="prob-card">
+      <div class="prob-num">04 — Zero Prediction</div>
+      <div class="prob-title">You find out what worked after you spent</div>
+      <div class="prob-body">Your best creative insight — which hook, which format, which creator archetype — arrives in the post-campaign report. By then the budget is gone. No one tells you what will win before you commit. No confidence intervals. No pre-spend RoAS forecast. Just variance you can't control and reports that arrive too late.</div>
+      <span class="prob-stat">RoAS is reported, never predicted</span>
     </div>
 
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     §3 WHY GALVOR
-═══════════════════════════════════════ -->
-<section id="why">
-  <div class="container">
-    <div class="section-header reveal">
-      <h2 class="section-title">Built for outcomes.<br><em>Powered by AI.</em></h2>
-      <p class="section-subtitle">Four things we do fundamentally differently.</p>
-    </div>
+<!-- ═══ OS SECTION ════════════════════════════════════ -->
+<section class="sec" id="os">
+  <div class="sec-label">What Galvor is</div>
+  <h2>The operating system for creator marketing.</h2>
+  <p class="sec-sub">Agencies execute without intelligence. Platforms give intelligence without execution. Galvor is the OS — both layers, unified, trained exclusively on your brand's data.</p>
 
-    <div class="vp-grid">
+  <div class="os-layout">
+    <div class="os-layers">
 
-      <!-- VP 1 -->
-      <div class="vp-card reveal reveal-delay-1">
-        <span class="vp-index">01</span>
-        <p class="vp-tag">Creator Selection</p>
-        <h3 class="vp-title">The Right Creator.<br>Not the Closest One.</h3>
-        <ul class="vp-features">
-          <li><span><strong>Demographic alignment</strong> — Age, gender, city match</span></li>
-          <li><span><strong>Content alignment</strong> — Tone and style fit</span></li>
-          <li><span><strong>Visual fit</strong> — Aesthetic consistency</span></li>
-          <li><span><strong>Engagement quality</strong> — Real followers only</span></li>
-        </ul>
+      <div class="os-layer-item" data-layer="1">
+        <div class="os-layer-icon li-blue">🧠</div>
+        <div>
+          <div class="os-layer-head">
+            <span class="os-layer-title">Prediction layer</span>
+            <span class="os-layer-badge badge-blue">AI model</span>
+          </div>
+          <div class="os-layer-desc">Pre-spend RoAS forecasting with confidence intervals. Creative scoring and creator ranking — trained exclusively on your campaign history, not network averages from other brands.</div>
+        </div>
       </div>
 
-      <!-- VP 2 -->
-      <div class="vp-card reveal reveal-delay-2">
-        <span class="vp-index">02</span>
-        <p class="vp-tag">Speed to Market</p>
-        <h3 class="vp-title">From Brief to Live<br>in Days, Not Weeks.</h3>
-        <ul class="vp-features">
-          <li><span><strong>Instant shortlisting</strong> — Creator lists in hours</span></li>
-          <li><span><strong>Bulk outreach</strong> — 50+ creators simultaneously</span></li>
-          <li><span><strong>Parallel workflows</strong> — Approvals run concurrently</span></li>
-          <li><span><strong>Template intelligence</strong> — Briefs auto-generated</span></li>
-        </ul>
+      <div class="os-layer-item" data-layer="2">
+        <div class="os-layer-icon li-green">⚙️</div>
+        <div>
+          <div class="os-layer-head">
+            <span class="os-layer-title">Execution layer</span>
+            <span class="os-layer-badge badge-green">Managed service</span>
+          </div>
+          <div class="os-layer-desc">Creator discovery, brief writing, negotiation, contracting, posting, tracking, and reporting — all operated by Galvor. Your team reviews and approves. We run everything else.</div>
+        </div>
       </div>
 
-      <!-- VP 3 -->
-      <div class="vp-card reveal reveal-delay-1">
-        <span class="vp-index">03</span>
-        <p class="vp-tag">Attribution</p>
-        <h3 class="vp-title">Attribution That Actually<br>Answers the Question.</h3>
-        <ul class="vp-features">
-          <li><span><strong>Affiliate tracking</strong> — Unique links per creator</span></li>
-          <li><span><strong>Ad sales attribution</strong> — Meta and Google tracked</span></li>
-          <li><span><strong>Footfall attribution</strong> — In-store visits correlated</span></li>
-          <li><span><strong>Creator dashboards</strong> — Who drove what results</span></li>
-        </ul>
+      <div class="os-layer-item" data-layer="3">
+        <div class="os-layer-icon li-purple">🔭</div>
+        <div>
+          <div class="os-layer-head">
+            <span class="os-layer-title">Intelligence layer</span>
+            <span class="os-layer-badge badge-purple">Competitive AI</span>
+          </div>
+          <div class="os-layer-desc">2,000+ competitor ads tracked and tagged continuously. Gap analysis, category benchmarks, and Brand DNA synthesis — updated every week across your competitive landscape.</div>
+        </div>
       </div>
 
-      <!-- VP 4 -->
-      <div class="vp-card reveal reveal-delay-2">
-        <span class="vp-index">04</span>
-        <p class="vp-tag">Scale</p>
-        <h3 class="vp-title">Scale Your Campaigns.<br>Not Your Headcount.</h3>
-        <ul class="vp-features">
-          <li><span><strong>New markets</strong> — Shortlists in hours</span></li>
-          <li><span><strong>Run more at once</strong> — Same operational overhead</span></li>
-          <li><span><strong>Reuse what works</strong> — Stored campaign playbooks</span></li>
-          <li><span><strong>Global</strong> — No local agency relationships needed</span></li>
-        </ul>
+      <div class="os-layer-item" data-layer="4">
+        <div class="os-layer-icon li-amber">🔄</div>
+        <div>
+          <div class="os-layer-head">
+            <span class="os-layer-title">Compounding layer</span>
+            <span class="os-layer-badge badge-amber">Flywheel</span>
+          </div>
+          <div class="os-layer-desc">Every campaign sharpens the model. Confidence intervals tighten. Predictions improve. A brand 12 months in has a data advantage no competitor can quickly replicate.</div>
+        </div>
       </div>
 
     </div>
 
-    <div class="why-closing reveal">
-      <p>This is what end-to-end looks like when <strong>AI runs the infrastructure</strong> and humans run the strategy.</p>
+    <div class="os-right-panel">
+      <div class="os-img-empty" id="os-empty">
+        <div class="os-img-empty-icon">☝️</div>
+        <span>Click any layer to see more</span>
+      </div>
+      <div class="os-img-slot" data-slot="1">
+        <img src="" alt="Prediction layer">
+      </div>
+      <div class="os-img-slot" data-slot="2">
+        <img src="" alt="Execution layer">
+      </div>
+      <div class="os-img-slot" data-slot="3">
+        <img src="" alt="Intelligence layer">
+      </div>
+      <div class="os-img-slot" data-slot="4">
+        <img src="" alt="Compounding layer">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ PLATFORM (combined with Deliverables) ════════ -->
+<section class="sec" id="platform">
+  <div class="sec-label">The platform</div>
+  <h2>Everything you need. One intelligence layer.</h2>
+  <p class="sec-sub">Every Galvor engagement includes live access to your brand's intelligence dashboard — six modules, all powered by your data alone.</p>
+
+  <div class="platform-layout">
+
+    <div class="platform-features">
+      <div class="pf-item active">
+        <div class="pf-icon">⬡</div>
+        <div>
+          <div class="pf-title">Creative Clusters</div>
+          <div class="pf-body">Your creatives grouped by performance. See which clusters drive RoAS vs. where budget is stranded. Your brand vs. competition tab view.</div>
+        </div>
+      </div>
+      <div class="pf-item">
+        <div class="pf-icon">◈</div>
+        <div>
+          <div class="pf-title">Creator Brand Fit &amp; RoAS Prediction</div>
+          <div class="pf-body">Every creator scored on audience match, Brand DNA alignment, and predicted RoAS — before activation.</div>
+        </div>
+      </div>
+      <div class="pf-item">
+        <div class="pf-icon">◎</div>
+        <div>
+          <div class="pf-title">Creative RoAS Prediction</div>
+          <div class="pf-body">Hook × format × creator tier matrix ranked by predicted RoAS with confidence intervals from your campaign history.</div>
+        </div>
+      </div>
+      <div class="pf-item">
+        <div class="pf-icon">⊞</div>
+        <div>
+          <div class="pf-title">Creative Attribute Linkage</div>
+          <div class="pf-body">Which specific attributes — hook style, setting, tone, visual format — are driving your RoAS. Evidence, not mood boards.</div>
+        </div>
+      </div>
+      <div class="pf-item">
+        <div class="pf-icon">⊕</div>
+        <div>
+          <div class="pf-title">Creative Recommendations</div>
+          <div class="pf-body">Model-generated brief for the next campaign — grounded in what works, what's untested, and what competitors haven't activated.</div>
+        </div>
+      </div>
+      <div class="pf-item">
+        <div class="pf-icon">◉</div>
+        <div>
+          <div class="pf-title">Brand DNA</div>
+          <div class="pf-body">The creative fingerprint of your best-performing content — synthesised from all tagged creatives. The intelligence behind every brief.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main screen: Creative Clusters -->
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="sd" style="background:#FF5F56"></div>
+        <div class="sd" style="background:#FFBD2E"></div>
+        <div class="sd" style="background:#27C93F"></div>
+        <span class="screen-title">Creative Clusters</span>
+        <span class="screen-badge sb-green">Live</span>
+      </div>
+      <div class="screen-body">
+        <div class="cc-split">
+          <div class="cc-left">
+            <div class="cc-sec-head">Performance clusters</div>
+            <div class="cluster-row top">
+              <div>
+                <div class="cr-name">Bold Claim × Product Demo</div>
+                <div class="cr-sbar"><div class="cr-sfill" style="width:68%;background:#2B4EFF"></div></div>
+              </div>
+              <div class="cr-roas-val" style="color:#10B981">2.49×</div>
+            </div>
+            <div class="cluster-row top">
+              <div>
+                <div class="cr-name">Luxury Value</div>
+                <div class="cr-sbar"><div class="cr-sfill" style="width:52%;background:#4D6EFF;opacity:0.7"></div></div>
+              </div>
+              <div class="cr-roas-val" style="color:#7B9FFF">2.28×</div>
+            </div>
+            <div class="cluster-row">
+              <div>
+                <div class="cr-name">Mid Performance</div>
+                <div class="cr-sbar"><div class="cr-sfill" style="width:84%;background:rgba(255,255,255,0.18)"></div></div>
+              </div>
+              <div class="cr-roas-val" style="color:rgba(255,255,255,0.4)">1.68×</div>
+            </div>
+            <div class="cc-warn">
+              <div class="cc-warn-title">⚠ 50.4% of spend in mid cluster</div>
+              <div class="cc-warn-body">Reallocate to top cluster → +48% RoAS lift</div>
+            </div>
+          </div>
+          <div class="cc-right">
+            <div class="cc-tabs">
+              <div class="cc-tab on">Your Brand</div>
+              <div class="cc-tab">Your Competition</div>
+            </div>
+            <div class="cc-sec-head">Spend distribution</div>
+            <div class="cc-mini-bars">
+              <div class="cc-bar-col" style="flex:1;height:30%;background:rgba(43,78,255,0.3)"></div>
+              <div class="cc-bar-col" style="flex:1;height:55%;background:rgba(43,78,255,0.45)"></div>
+              <div class="cc-bar-col" style="flex:1;height:82%;background:#2B4EFF"></div>
+              <div class="cc-bar-col" style="flex:1;height:42%;background:rgba(43,78,255,0.3)"></div>
+              <div class="cc-bar-col" style="flex:1;height:22%;background:rgba(43,78,255,0.2)"></div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.06);margin:10px 0"></div>
+            <div class="cc-sec-head">RoAS by cluster</div>
+            <div class="cc-stat-row"><span class="cc-stat-label">Bold Claim × Demo</span><span class="cc-stat-val" style="color:#10B981">2.49×</span></div>
+            <div class="cc-stat-row"><span class="cc-stat-label">Luxury Value</span><span class="cc-stat-val" style="color:#7B9FFF">2.28×</span></div>
+            <div class="cc-stat-row"><span class="cc-stat-label">Mid Performance</span><span class="cc-stat-val" style="color:rgba(255,255,255,0.4)">1.68×</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Secondary screens: 3 columns -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px">
+
+    <!-- Creator Brand Fit -->
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+        <span class="screen-title">Creator Brand Fit &amp; RoAS</span>
+      </div>
+      <div class="screen-body">
+        <div class="cbf-row">
+          <div class="cbf-avatar" style="background:#2B4EFF">NK</div>
+          <div style="flex:1">
+            <div class="cbf-handle">@skincare.nk · Nano</div>
+            <div class="cbf-tags">Tutorial · F 25–32 · Skincare</div>
+            <div class="cbf-scores">
+              <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#10B981">94%</div></div>
+              <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.3×</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="cbf-row">
+          <div class="cbf-avatar" style="background:#7C3AED">PV</div>
+          <div style="flex:1">
+            <div class="cbf-handle">@priya.velvet · Micro</div>
+            <div class="cbf-tags">Styling · F 22–28 · Fashion</div>
+            <div class="cbf-scores">
+              <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#A78BFA">88%</div></div>
+              <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.1×</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="cbf-row">
+          <div class="cbf-avatar" style="background:#059669">AS</div>
+          <div style="flex:1">
+            <div class="cbf-handle">@aarav.well · Nano</div>
+            <div class="cbf-tags">Testimonial · M 28–40 · Wellness</div>
+            <div class="cbf-scores">
+              <div class="cbf-score"><div class="cbf-score-label">Brand Fit</div><div class="cbf-score-val" style="color:#6EE7B7">82%</div></div>
+              <div class="cbf-score"><div class="cbf-score-label">Pred. RoAS</div><div class="cbf-score-val" style="color:#7B9FFF">2.0×</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creative RoAS Prediction -->
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+        <span class="screen-title">Creative RoAS Prediction</span>
+      </div>
+      <div class="screen-body">
+        <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-bottom:8px">Hook × Format — based on your campaign history</div>
+        <table class="roas-matrix" style="width:100%">
+          <tr>
+            <td class="rm-th left" style="width:76px"></td>
+            <td class="rm-th">Product demo</td>
+            <td class="rm-th">Tutorial</td>
+            <td class="rm-th">Talking head</td>
+          </tr>
+          <tr>
+            <td class="rm-td row-label">Bold claim</td>
+            <td class="rm-td hot">2.49×</td>
+            <td class="rm-td mid">1.9×</td>
+            <td class="rm-td mid">2.1×</td>
+          </tr>
+          <tr>
+            <td class="rm-td row-label">Ingredient edu.</td>
+            <td class="rm-td mid">2.0×</td>
+            <td class="rm-td hot">2.3×</td>
+            <td class="rm-td dim">1.5×</td>
+          </tr>
+          <tr>
+            <td class="rm-td row-label">Transformation</td>
+            <td class="rm-td dim">1.7×</td>
+            <td class="rm-td mid">2.2×</td>
+            <td class="rm-td dim">1.6×</td>
+          </tr>
+        </table>
+        <div style="margin-top:9px;display:flex;align-items:center;gap:6px">
+          <div style="width:8px;height:8px;background:rgba(43,78,255,0.22);border:1px solid rgba(43,78,255,0.4);border-radius:2px"></div>
+          <span style="color:rgba(255,255,255,0.25);font-size:9px">Your brand data only — no network averages</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creative Attribute Linkage -->
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+        <span class="screen-title">Creative Attribute Linkage</span>
+      </div>
+      <div class="screen-body">
+        <div style="color:rgba(255,255,255,0.25);font-size:10px;margin-bottom:10px">Attribute → RoAS impact (your brand)</div>
+        <div class="attr-row" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15)">
+          <span class="attr-label">Bold claim hook</span><span class="attr-val" style="color:#10B981">+0.81×</span>
+        </div>
+        <div class="attr-row" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.15)">
+          <span class="attr-label">Ingredient education</span><span class="attr-val" style="color:#7B9FFF">+0.62×</span>
+        </div>
+        <div class="attr-row" style="background:rgba(43,78,255,0.05);border:1px solid rgba(43,78,255,0.1)">
+          <span class="attr-label">Product demo format</span><span class="attr-val" style="color:#7B9FFF">+0.44×</span>
+        </div>
+        <div class="attr-row" style="background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12)">
+          <span class="attr-label">Discount signal hook</span><span class="attr-val" style="color:rgba(255,90,90,0.8)">−0.38×</span>
+        </div>
+        <div class="attr-row" style="background:rgba(255,80,80,0.04);border:1px solid rgba(255,80,80,0.08)">
+          <span class="attr-label">Generic lifestyle B-roll</span><span class="attr-val" style="color:rgba(255,90,90,0.8)">−0.52×</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Third row: Recommendations + Brand DNA -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+
+    <!-- Creative Recommendations -->
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+        <span class="screen-title">Creative Recommendations</span>
+        <span class="screen-badge sb-blue">Next campaign</span>
+      </div>
+      <div class="screen-body">
+        <div class="reco-card" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.2)">
+          <div class="reco-tag" style="color:#7B9FFF">Recommended — 2.2–2.6× predicted RoAS</div>
+          <div class="reco-body" style="color:rgba(255,255,255,0.65)">Bold claim × Product demo · Nano creator · F 25–34 · Ingredient-led hook · 30–45 sec reel</div>
+        </div>
+        <div class="reco-card" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18)">
+          <div class="reco-tag" style="color:#10B981">Untested — competitive whitespace</div>
+          <div class="reco-body" style="color:rgba(255,255,255,0.65)">Science-backed hook × Tutorial format — zero competitor spend. Uncontested opportunity in your category.</div>
+        </div>
+        <div class="reco-card" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18)">
+          <div class="reco-tag" style="color:#F59E0B">Avoid — below brand average</div>
+          <div class="reco-body" style="color:rgba(255,255,255,0.55)">Discount-led hook × Lifestyle B-roll — 0.9× predicted RoAS. Audience conditioning risk on premium SKUs.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand DNA -->
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="sd" style="background:#FF5F56"></div><div class="sd" style="background:#FFBD2E"></div><div class="sd" style="background:#27C93F"></div>
+        <span class="screen-title">Brand DNA</span>
+        <span class="screen-badge sb-purple">Updated after each campaign</span>
+      </div>
+      <div class="screen-body">
+        <div class="dna-grid">
+          <div class="dna-cell" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.18)">
+            <div class="dna-cell-label">Core hook archetype</div>
+            <div class="dna-cell-val" style="color:#A78BFA">Bold claim → reveal</div>
+          </div>
+          <div class="dna-cell" style="background:rgba(43,78,255,0.08);border:1px solid rgba(43,78,255,0.18)">
+            <div class="dna-cell-label">Creator archetype</div>
+            <div class="dna-cell-val" style="color:#7B9FFF">Tutorial nano, F 25–34</div>
+          </div>
+          <div class="dna-cell" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18)">
+            <div class="dna-cell-label">Winning visual tone</div>
+            <div class="dna-cell-val" style="color:#6EE7B7">Premium, editorial</div>
+          </div>
+          <div class="dna-cell" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18)">
+            <div class="dna-cell-label">Model confidence</div>
+            <div class="dna-cell-val" style="color:#FCD34D">78% (month 6)</div>
+          </div>
+        </div>
+        <div class="dna-tags-wrap">
+          <div class="dna-tags-label">Top-performing attributes</div>
+          <div class="dna-tags">
+            <span class="dna-tag" style="background:rgba(139,92,246,0.12);color:#A78BFA">Ingredient education</span>
+            <span class="dna-tag" style="background:rgba(43,78,255,0.1);color:#7B9FFF">Premium setting</span>
+            <span class="dna-tag" style="background:rgba(16,185,129,0.08);color:#6EE7B7">Confidence tone</span>
+            <span class="dna-tag" style="background:rgba(43,78,255,0.08);color:#7B9FFF">30–45 sec format</span>
+            <span class="dna-tag" style="background:rgba(139,92,246,0.1);color:#A78BFA">Direct CTA at sec 20</span>
+            <span class="dna-tag" style="background:rgba(245,158,11,0.08);color:#FCD34D">Science-backed hook</span>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     §4 WHAT WE OFFER
-═══════════════════════════════════════ -->
-<section id="offer">
-  <div class="container">
-    <div class="section-header reveal">
-      <h2 class="section-title">We own outcomes,<br><em>not just processes.</em></h2>
-      <p class="section-subtitle">From the first brief to the last conversion — Galvor runs the full campaign lifecycle so your team can focus on the brand, not the operations.</p>
+<!-- ═══ RESULTS ════════════════════════════════════════ -->
+<section class="sec dark" id="results">
+  <div class="sec-label" style="color:#7B9FFF">Results</div>
+  <h2>Proof across three verticals.</h2>
+  <p class="sec-sub">The model works across fashion, beauty, and wellness — because it trains on your data, not an industry average.</p>
+
+  <div class="results-grid">
+
+    <!-- Fashion -->
+    <div class="result-card" style="border-color:rgba(123,159,255,0.18)">
+      <div class="r-vert-label fashion">Fashion — Menswear</div>
+      <div class="r-brand">Premium linen &amp; cotton D2C brand</div>
+      <div class="r-brand-note">330 creatives analysed · $50K total spend mapped</div>
+      <div class="r-find"><div class="r-pip" style="background:#7B9FFF"></div><div class="r-text">Bold claim × product demo: 2.49× RoAS — highest format, only 7% of spend allocated there</div></div>
+      <div class="r-find"><div class="r-pip" style="background:#7B9FFF"></div><div class="r-text">50.4% of budget locked in mid-tier cluster at 1.68× — 36% below the top cluster</div></div>
+      <div class="r-find"><div class="r-pip" style="background:#7B9FFF"></div><div class="r-text">Luxury Value cluster at 2.28× — identified and scaled in month 2</div></div>
+      <div class="r-metrics">
+        <div class="r-met"><div class="r-num blue">2.5×</div><div class="r-lbl">RoAS at month 6 (from 1.5×)</div></div>
+        <div class="r-met"><div class="r-num blue">+67%</div><div class="r-lbl">RoAS improvement</div></div>
+        <div class="r-met"><div class="r-num" style="color:#fff;font-size:18px">$3,800</div><div class="r-lbl">budget reallocated in month 1</div></div>
+        <div class="r-met"><div class="r-num" style="color:#fff;font-size:18px">80%</div><div class="r-lbl">prediction confidence at month 6</div></div>
+      </div>
+      <div class="r-quote">
+        <div class="r-qt">"We reallocated misplaced budget in the first month. The model showed us exactly which cluster we'd been over-investing in for 18 months."</div>
+        <div class="r-attr">— Founder</div>
+      </div>
     </div>
 
-    <div class="phases-grid">
-
-      <!-- Phase 1 -->
-      <div class="phase-card reveal reveal-delay-1">
-        <div class="phase-header">
-          <p class="phase-phase">Phase 01</p>
-          <p class="phase-title">Strategy &amp; Planning</p>
-          <p class="phase-tagline">Every campaign starts with clarity.</p>
-        </div>
-        <div class="phase-items">
-          <div class="phase-item">
-            <p class="phase-item-title">Audience &amp; Messaging</p>
-            <p class="phase-item-text">Target group defined by age, city, gender, and income.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Strategy &amp; Trend Intel</p>
-            <p class="phase-item-text">Category analysis and trend-driven campaign strategy.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Budget &amp; Targets</p>
-            <p class="phase-item-text">KPIs set around conversions and outcomes, not vanity metrics.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Campaign Planning</p>
-            <p class="phase-item-text">Creator tier mix, platform selection, formats, and timeline.</p>
-          </div>
-        </div>
+    <!-- Beauty -->
+    <div class="result-card" style="border-color:rgba(249,168,212,0.18)">
+      <div class="fictional-badge">⚑ Illustrative — replace with client data</div>
+      <div class="r-vert-label beauty">Beauty — Skincare</div>
+      <div class="r-brand">Clean skincare &amp; serum D2C brand</div>
+      <div class="r-brand-note">Tutorial-format nano creator strategy</div>
+      <div class="r-find"><div class="r-pip" style="background:#F9A8D4"></div><div class="r-text">Tutorial nano creators (F 25–34) outperformed lifestyle creators 2.8× on RoAS</div></div>
+      <div class="r-find"><div class="r-pip" style="background:#F9A8D4"></div><div class="r-text">Ingredient-explanation hook: 3.1× vs generic hooks at 1.1×</div></div>
+      <div class="r-find"><div class="r-pip" style="background:#F9A8D4"></div><div class="r-text">30% of spend reallocated from broad-awareness to tutorial-micro cluster</div></div>
+      <div class="r-metrics">
+        <div class="r-met"><div class="r-num pink">2.4×</div><div class="r-lbl">RoAS at month 5 (from 1.3×)</div></div>
+        <div class="r-met"><div class="r-num pink">3×</div><div class="r-lbl">higher hook rate, tutorial format</div></div>
+        <div class="r-met"><div class="r-num" style="color:#fff;font-size:18px">30%</div><div class="r-lbl">reduction in wasted creator spend</div></div>
+        <div class="r-met"><div class="r-num" style="color:#fff;font-size:18px">11.8%</div><div class="r-lbl">avg hook rate (from 4.2%)</div></div>
       </div>
-
-      <!-- Phase 2 -->
-      <div class="phase-card reveal reveal-delay-2">
-        <div class="phase-header">
-          <p class="phase-phase">Phase 02</p>
-          <p class="phase-title">Sourcing &amp; Onboarding</p>
-          <p class="phase-tagline">The right creator is everything.</p>
-        </div>
-        <div class="phase-items">
-          <div class="phase-item">
-            <p class="phase-item-title">Discovery &amp; Sourcing</p>
-            <p class="phase-item-text">AI search filtered by demographics, engagement, and visual fit.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Briefs &amp; Scripts</p>
-            <p class="phase-item-text">Creator briefs that protect the brand and preserve their voice.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Outreach &amp; Negotiations</p>
-            <p class="phase-item-text">Personalised outreach to 50+ creators with rate benchmarking.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Onboarding &amp; Contracting</p>
-            <p class="phase-item-text">Contracts, KYC, compliance, and payment details — all handled.</p>
-          </div>
-        </div>
+      <div class="r-quote" style="border-left-color:rgba(249,168,212,0.4)">
+        <div class="r-qt">"We'd been spending on the wrong creator type for a year. The model identified it in the first audit — and fixed it in the next campaign."</div>
+        <div class="r-attr">— CMO</div>
       </div>
-
-      <!-- Phase 3 -->
-      <div class="phase-card reveal reveal-delay-1">
-        <div class="phase-header">
-          <p class="phase-phase">Phase 03</p>
-          <p class="phase-title">Execution &amp; Performance</p>
-          <p class="phase-tagline">Campaigns fail at execution, not strategy.</p>
-        </div>
-        <div class="phase-items">
-          <div class="phase-item">
-            <p class="phase-item-title">Creator Coordination</p>
-            <p class="phase-item-text">Product dispatch, scheduling, and post go-live monitoring.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Content Production</p>
-            <p class="phase-item-text">Review and approval loop so nothing goes live unvetted.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Campaign Tracking</p>
-            <p class="phase-item-text">Real-time creator-level reach, engagement, and conversions.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Creator Payments</p>
-            <p class="phase-item-text">Milestone-based, automated. TDS compliant. No delays.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 4 -->
-      <div class="phase-card reveal reveal-delay-2">
-        <div class="phase-header">
-          <p class="phase-phase">Phase 04</p>
-          <p class="phase-title">Amplification &amp; Measurement</p>
-          <p class="phase-tagline">A great campaign doesn't end at posting.</p>
-        </div>
-        <div class="phase-items">
-          <div class="phase-item">
-            <p class="phase-item-title">Performance Marketing</p>
-            <p class="phase-item-text">Top content amplified via paid media on Meta and Google.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Analytics Dashboard</p>
-            <p class="phase-item-text">ROAS, affiliate conversions, and promo redemptions in one view.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">ROI Measurement</p>
-            <p class="phase-item-text">Closed-loop attribution across links, ad sales, and footfall.</p>
-          </div>
-          <div class="phase-item">
-            <p class="phase-item-title">Insights &amp; Playbook</p>
-            <p class="phase-item-text">End-of-campaign debrief. Every campaign makes the next smarter.</p>
-          </div>
-        </div>
-      </div>
-
     </div>
 
-    <div class="offer-closing reveal">
-      <blockquote>Most agencies hand you a report and call it done. Galvor hands you the next brief.</blockquote>
+    <!-- Wellness -->
+    <div class="result-card" style="border-color:rgba(110,231,183,0.18)">
+      <div class="fictional-badge">⚑ Illustrative — replace with client data</div>
+      <div class="r-vert-label wellness">Wellness — Supplements</div>
+      <div class="r-brand">Ayurvedic supplements D2C brand</div>
+      <div class="r-brand-note">Community-trust creator model</div>
+      <div class="r-find"><div class="r-pip" style="background:#6EE7B7"></div><div class="r-text">Long-form testimonial (90+ sec) by science-credible creators: 2.6× uplift on conversion</div></div>
+      <div class="r-find"><div class="r-pip" style="background:#6EE7B7"></div><div class="r-text">Community-trust archetype: 2.1× vs lifestyle-aspirational at 0.9×</div></div>
+      <div class="r-find"><div class="r-pip" style="background:#6EE7B7"></div><div class="r-text">Science-backed hook — zero competitor spend. Uncontested whitespace activated.</div></div>
+      <div class="r-metrics">
+        <div class="r-met"><div class="r-num green">2.1×</div><div class="r-lbl">RoAS at month 6 (from 1.1×)</div></div>
+        <div class="r-met"><div class="r-num green">+91%</div><div class="r-lbl">RoAS improvement</div></div>
+        <div class="r-met"><div class="r-num" style="color:#fff;font-size:18px">$4,800</div><div class="r-lbl">reallocated to winning cluster</div></div>
+        <div class="r-met"><div class="r-num" style="color:#fff;font-size:18px">2.6×</div><div class="r-lbl">uplift vs aspirational content</div></div>
+      </div>
+      <div class="r-quote" style="border-left-color:rgba(110,231,183,0.4)">
+        <div class="r-qt">"We were spending on the wrong creator archetype entirely. The model identified it immediately — reallocation paid back in campaign one."</div>
+        <div class="r-attr">— Founder</div>
+      </div>
     </div>
 
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     §5 CLIENTS
-═══════════════════════════════════════ -->
-<section id="clients">
-  <div class="container">
-    <div class="clients-header reveal">
-      <div>
-        <h2 class="section-title">Brands that<br><em>chose outcomes.</em></h2>
-      </div>
-    </div>
+<!-- ═══ FLYWHEEL ═══════════════════════════════════════ -->
+<section class="sec alt">
+  <div class="sec-label">The flywheel</div>
+  <h2>Predictions sharpen every month.</h2>
+  <p class="sec-sub">Every campaign is a training event. This is a compounding data asset — not a monthly retainer you walk away from empty-handed.</p>
 
-    <div class="logo-grid">
-      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image14.png" alt="Amazon"></div>
-      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image21.png" alt="AngelOne"></div>
-      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image15.png" alt="GMR"></div>
-      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image23.png" alt="MaisonX"></div>
-      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image17.png" alt="Xtend"></div>
-      <div class="logo-cell reveal reveal-delay-1"><img class="logo-img" src="galvor_images/image25.png" alt="C4"></div>
-      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image22.png" alt="Pure Nutrition"></div>
-      <div class="logo-cell reveal reveal-delay-2"><img class="logo-img" src="galvor_images/image20.png" alt="Physics Wallah"></div>
-      <div class="logo-cell reveal reveal-delay-3"><img class="logo-img" src="galvor_images/image4.png" alt="Halo Care"></div>
-      <div class="logo-cell reveal reveal-delay-3"><img class="logo-img" src="galvor_images/image13.png" alt="Blue Nectar"></div>
-      <div class="logo-cell reveal reveal-delay-4"><img class="logo-img" src="galvor_images/image26.png" alt="LimeRoad"></div>
-      <div class="logo-cell reveal reveal-delay-4"><img class="logo-img" src="galvor_images/image27.png" alt="Turtle"></div>
+  <div class="fw-grid">
+    <div class="fw-phase" data-n="1">
+      <div class="fw-time">Month 1</div>
+      <div class="fw-title">Your data is instrumented. First patterns visible.</div>
+      <div class="fw-body">Creative history tagged, Brand DNA synthesised, competitor landscape mapped. First recommendations from your data — not category averages.</div>
+      <span class="fw-metric">Baseline established</span>
     </div>
+    <div class="fw-phase" data-n="3">
+      <div class="fw-time">Month 3</div>
+      <div class="fw-title">Hook-format matrix live. Creator scoring active.</div>
+      <div class="fw-body">Enough data to rank creative combinations with confidence. Creators now scored against your model specifically — not generic benchmarks.</div>
+      <span class="fw-metric">First cluster insights</span>
+    </div>
+    <div class="fw-phase" data-n="6">
+      <div class="fw-time">Month 6</div>
+      <div class="fw-title">80% confidence. RoAS within 0.3× of forecast.</div>
+      <div class="fw-body">Pre-spend forecasts reach 80% confidence. This is the inflection point — most brands see their biggest RoAS improvements starting here.</div>
+      <span class="fw-metric green">Inflection point</span>
+    </div>
+    <div class="fw-phase" data-n="12">
+      <div class="fw-time">Month 12+</div>
+      <div class="fw-title">Compounding advantage. Gap from competitors widens.</div>
+      <div class="fw-body">12 months of model training no competitor can quickly replicate. Every campaign makes predictions sharper. The model is yours — permanently.</div>
+      <span class="fw-metric green">Sustainable moat</span>
+    </div>
+  </div>
 
+  <div class="fw-pause">
+    <div class="fw-pause-icon">🔒</div>
+    <div>
+      <div class="fw-pause-title">What happens if you pause?</div>
+      <div class="fw-pause-body">The model you've built stays yours. Your data, creative intelligence, and Brand DNA are all retained. The managed service can pause — your data asset doesn't disappear.</div>
+    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     §6 CONTACT
-═══════════════════════════════════════ -->
-<section id="contact">
-  <div class="container">
-    <div class="contact-grid">
+<!-- ═══ ICP ════════════════════════════════════════════ -->
+<section class="sec" id="who">
+  <div class="sec-label">Who it's for</div>
+  <h2>Built for D2C brands with RoAS accountability.</h2>
+  <p class="sec-sub">Galvor works best with real creator spend to model and real RoAS accountability to improve.</p>
 
-      <div class="contact-left reveal">
-        <h2 class="section-title">Ready to run<br><em>campaigns that count?</em></h2>
-        <p class="contact-intro">Tell us about your brand and we'll reach out within 24 hours to discuss how Galvor can work for your next campaign.</p>
-        <div class="contact-email-line">
-          <div class="email-line-bar"></div>
-          <a href="mailto:sales@galvor.com" class="email-link">sales@galvor.com</a>
+  <p style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px">Categories we serve</p>
+  <div class="chips-wrap">
+    <div class="chips">
+      <!-- set 1 -->
+      <span class="chip">Women's fashion &amp; apparel</span>
+      <span class="chip">Menswear &amp; premium basics</span>
+      <span class="chip">Skincare &amp; serums</span>
+      <span class="chip">Makeup &amp; beauty</span>
+      <span class="chip">Haircare</span>
+      <span class="chip">Health &amp; supplements</span>
+      <span class="chip">Ayurvedic &amp; wellness</span>
+      <span class="chip">Personal care</span>
+      <span class="chip">Activewear</span>
+      <span class="chip">Accessories &amp; footwear</span>
+      <!-- set 2 — duplicate for seamless loop -->
+      <span class="chip">Women's fashion &amp; apparel</span>
+      <span class="chip">Menswear &amp; premium basics</span>
+      <span class="chip">Skincare &amp; serums</span>
+      <span class="chip">Makeup &amp; beauty</span>
+      <span class="chip">Haircare</span>
+      <span class="chip">Health &amp; supplements</span>
+      <span class="chip">Ayurvedic &amp; wellness</span>
+      <span class="chip">Personal care</span>
+      <span class="chip">Activewear</span>
+      <span class="chip">Accessories &amp; footwear</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA / DEMO FORM ═══════════════════════════════ -->
+<section class="cta-sec" id="demo">
+  <div class="cta-inner">
+    <div class="demo-layout">
+      <div class="demo-left">
+        <h2 style="text-align:left;margin:0 0 16px">See what your data predicts.</h2>
+        <p style="text-align:left;margin:0 0 36px">In 30 minutes, we'll run your campaign history through Galvor and show you three things:</p>
+        <div class="cta-pts" style="margin:0">
+          <div class="cta-pt"><div class="cta-num">1</div><div class="cta-txt">Your RoAS forecast — what your next campaign is likely to deliver, before you spend.</div></div>
+          <div class="cta-pt"><div class="cta-num">2</div><div class="cta-txt">Your top creative cluster — and how much budget is currently missing it.</div></div>
+          <div class="cta-pt"><div class="cta-num">3</div><div class="cta-txt">Your biggest competitive gap — where category leaders are spending that you're not.</div></div>
         </div>
       </div>
-
-      <div class="reveal reveal-delay-2">
-        <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-card">
+        <form id="demo-form">
           <div class="form-row">
             <div class="form-field">
-              <label class="form-label" for="name">Full Name</label>
-              <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required>
+              <label for="f-name">Name</label>
+              <input id="f-name" type="text" name="name" placeholder="Your name" required>
             </div>
             <div class="form-field">
-              <label class="form-label" for="email">Email Address</label>
-              <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com" required>
+              <label for="f-phone">Phone</label>
+              <input id="f-phone" type="tel" name="phone" placeholder="+91 00000 00000">
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label class="form-label" for="phone">Phone Number</label>
-              <input class="form-input" type="tel" id="phone" name="phone" placeholder="+91 00000 00000">
-            </div>
-            <div class="form-field">
-              <label class="form-label" for="company">Company Name</label>
-              <input class="form-input" type="text" id="company" name="company" placeholder="Your company" required>
-            </div>
+          <div class="form-field">
+            <label for="f-email">Work Email</label>
+            <input id="f-email" type="email" name="email" placeholder="you@brand.com" required>
           </div>
-          <button type="submit" class="form-submit">Send Message</button>
-          <p id="form-msg" style="font-family:'Syne',sans-serif;font-size:0.72rem;color:var(--gold);opacity:0;transition:opacity 0.3s;margin-top:-8px;"></p>
+          <div class="form-field">
+            <label for="f-company">Company Name</label>
+            <input id="f-company" type="text" name="company" placeholder="Brand / company name" required>
+          </div>
+          <div class="form-field">
+            <label for="f-requirements">Tell us a little about your requirements</label>
+            <textarea id="f-requirements" name="requirements" placeholder="Monthly creator spend, category, goals..."></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="form-btn">Book your demo →</button>
+          <div class="form-note">30 minutes. Your data. No deck.</div>
         </form>
+        <div id="form-success" style="display:none;text-align:center;padding:40px 20px">
+          <div style="font-size:36px;margin-bottom:16px">✓</div>
+          <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:8px">We'll be in touch shortly.</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:14px;line-height:1.6">Thanks for reaching out. Expect a message from the Galvor team within 24 hours.</div>
+        </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- ═══ FOOTER ════════════════════════════════════════ -->
 <footer>
-  <span class="footer-logo">Galvor</span>
-  <span class="footer-copy">© 2026 Galvor. End-to-end influencer campaigns.</span>
-  <div class="footer-social">
-    <a href="https://www.instagram.com/galvorai" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      Instagram
-    </a>
-    <a href="https://www.linkedin.com/company/galvorai/" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      LinkedIn
-    </a>
-  </div>
+  <div class="footer-logo">GALVOR</div>
+  <div class="footer-tagline">The Creator Performance (Predictive RoAS) Company &nbsp;·&nbsp; Fashion · Beauty · Wellness</div>
 </footer>
 
 <script>
-  /* ── SCROLL PROGRESS ── */
-  const bar = document.getElementById('progress');
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-    bar.style.width = pct + '%';
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
+  // OS layer click-to-reveal image
+  document.querySelectorAll('.os-layer-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const layer = item.dataset.layer;
+      const isActive = item.classList.contains('os-active');
+      const empty = document.getElementById('os-empty');
 
-  /* ── REVEAL ON SCROLL ── */
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-  }, { threshold: 0.12 });
-  reveals.forEach(el => observer.observe(el));
+      document.querySelectorAll('.os-layer-item').forEach(el => el.classList.remove('os-active'));
+      document.querySelectorAll('.os-img-slot').forEach(el => el.classList.remove('os-visible'));
 
-  /* ── PHASE TOGGLE ── */
-  function togglePhase(header) {
-    const card = header.closest('.phase-card');
-    card.classList.toggle('open');
-  }
+      if (!isActive) {
+        item.classList.add('os-active');
+        document.querySelector(`.os-img-slot[data-slot="${layer}"]`).classList.add('os-visible');
+        empty.style.display = 'none';
+      } else {
+        empty.style.display = 'flex';
+      }
+    });
+  });
 
-  /* ── FORM SUBMIT ── */
-  function handleSubmit(e) {
+  // Demo form
+  const form = document.getElementById('demo-form');
+  const btn = document.getElementById('form-btn');
+  const success = document.getElementById('form-success');
+
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
-    const msg = document.getElementById('form-msg');
-    msg.textContent = 'Thank you — we\'ll be in touch within 24 hours.';
-    msg.style.opacity = '1';
-    e.target.reset();
-    setTimeout(() => { msg.style.opacity = '0'; }, 5000);
-  }
-</script>
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
 
+    try {
+      const res = await fetch('https://formspree.io/f/xpqyokjo', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      } else {
+        btn.textContent = 'Something went wrong — try again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Something went wrong — try again';
+      btn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>
